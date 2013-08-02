@@ -1,0 +1,21 @@
+{
+  "name": "division",
+  "version": "0.0.0",
+  "description": "Another wrapper for node cluster API",
+  "main": "lib/",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": "",
+  "keywords": [
+    "cluster",
+    "manager"
+  ],
+  "author": "codename-",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-clean": "~0.5.0"
+  }
+}
