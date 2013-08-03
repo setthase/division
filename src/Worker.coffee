@@ -1,22 +1,55 @@
-cluster      = require 'cluster'
-EventEmitter = require('events').EventEmitter
+cluster        = require 'cluster'
+{EventEmitter} = require 'events'
 
+############################
+#
+# Worker
 # Wrapper around worker process of cluster
-class Worker extends EventEmitter
-  constructor: (@original) ->
-    @id  = original.id
-    @pid = original.pid
-    @env = process.env.NODE_ENV || 'development'
+#
+module.exports = class Worker extends EventEmitter
+  constructor: () ->
+    @instance = do cluster.fork
 
+    @id  = @instance.id
+    @pid = @instance.pid
+
+    @status  = "configuring"
     @startup = new Date
 
-  ######
-  # Helper for adding properties to prototype
-  __define = (args...) => Object.defineProperty.apply null, [Worker.prototype].concat args
+    # Watch worker status change
+    do @watchStatus
 
-  ######
-  # Define public API
+  ############################
 
-  ######
+  ## Helper for adding properties to prototype
+  __define = (args...) => Object.defineProperty.apply null, [].concat Worker.prototype, args
+
+  ############################
+  #
+  # Define public methods
+  #
+
+  ## Management of Worker process methods
+
+  # Disconnect
+
+  # Destroy
+
+  ############################
+  #
   # Define private methods
+  #
 
+  ## Configure helpers
+
+  # Listen for worker events and change status to proper one
+  __define "watchStatus", value: ->
+
+    @instance.on "online", =>
+      @status = "created"
+
+    @instance.on "listening", =>
+      @status = "listening"
+
+    @instance.on "disconnect", =>
+      @status = "disconnected"

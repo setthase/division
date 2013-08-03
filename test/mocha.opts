@@ -1,0 +1,6 @@
+--compilers coffee:coffee-script
+--reporter spec
+--ui bdd
+--colors
+--bail
+--timeout 5000
