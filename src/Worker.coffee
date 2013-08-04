@@ -11,7 +11,7 @@ module.exports = class Worker extends EventEmitter
     @instance = do cluster.fork
 
     @id  = @instance.id
-    @pid = @instance.pid
+    @pid = @instance.process.pid
 
     @status  = "configuring"
     @startup = new Date
@@ -34,6 +34,12 @@ module.exports = class Worker extends EventEmitter
   # Disconnect
 
   # Destroy
+
+  ## Communication methods
+
+  # Send message to worker instance
+  __define "publish", enumerable: yes, value: (event, parameters...) ->
+
 
   ############################
   #

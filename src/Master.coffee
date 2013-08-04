@@ -28,12 +28,13 @@ module.exports = class Master extends EventEmitter
   # Register signal
   __define "addSignalListener", enumerable: yes, value: (signal, callback) ->
     process.on signal, callback.call this
+    return this
 
   ## Runtime
 
   # Spawn new worker
   __define "increase", enumerable: yes, value: (n = 1) ->
-    @workers.push new Worker while n--
+    @workers.push new Worker() while n--
     return this
 
   # Close one of workers
@@ -54,7 +55,7 @@ module.exports = class Master extends EventEmitter
 
   # Graceful shutdown cluster
   __define "close", enumerable: yes, value: ->
-    @state = 'graceful shutdown'
+    @state = 'closing'
     @kill 'SIGQUIT'
     @pendingDeaths = @workers.length
 
@@ -62,7 +63,7 @@ module.exports = class Master extends EventEmitter
 
   # Hard shutdown cluster
   __define "destroy", enumerable: yes, value: ->
-    @state = 'hard shutdown'
+    @state = 'destroying'
     @kill 'SIGKILL'
     do @_destroy
 
@@ -78,15 +79,15 @@ module.exports = class Master extends EventEmitter
   ## Communication
 
   # Send message to worker with `id`
-  __define "publish", enumerable: yes, value: (id, event, arguments...) ->
-    @findWorker(id)?.publish event, arguments
+  __define "publish", enumerable: yes, value: (id, event, parameters...) ->
+    @findWorker(id)?.publish event, parameters
 
     return this
 
   # Send message to all workers
-  __define "broadcast", enumerable: yes, value: (event, arguments...) ->
+  __define "broadcast", enumerable: yes, value: (event, parameters...) ->
     @workers.forEach (worker) ->
-      worker.publish event, arguments
+      worker.publish event, parameters
 
     return this
 
@@ -96,7 +97,7 @@ module.exports = class Master extends EventEmitter
   #
 
   # Configure cluster master process
-  __define "configure", enumerable: yes, value: (settings) ->
+  __define "configure", enumerable: yes, value: (@settings) ->
 
     # TODO: Some options and functions here
 
@@ -104,7 +105,7 @@ module.exports = class Master extends EventEmitter
     do @mapEvents
 
     # Set cluster runtime environment
-    cluster.setupMaster { exec : settings.path, args : settings.args, silent : settings.silent }
+    cluster.setupMaster { exec : @settings.path, args : @settings.args, silent : @settings.silent }
 
   # Map cluster events to Master events
   __define "mapEvents", value: ->

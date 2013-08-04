@@ -2,7 +2,7 @@
   "name": "division",
   "version": "0.1.0",
   "description": "Another wrapper for node cluster API",
-  "main": "lib/",
+  "main": "lib/division.js",
   "scripts": {
     "test": "mocha"
   },

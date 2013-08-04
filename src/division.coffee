@@ -6,7 +6,7 @@ module.exports = class Division extends EventEmitter
   constructor: (settings) ->
     @environment = process.env.NODE_ENV || 'development'
 
-    @master  = new Master
+    @master  = new Master()
     @version = "0.1.0"
 
     # Default settings
@@ -73,8 +73,9 @@ module.exports = class Division extends EventEmitter
       @master.configure @settings
 
       # Start master process
-      counter = 0
-      do @master.increase until counter++ <= @settings.size
+      process.nextTick =>
+        counter = 0
+        do @master.increase while counter++ <= @settings.size
 
       @running = yes
 
