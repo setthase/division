@@ -9,21 +9,36 @@ cluster        = require 'cluster'
 #
 
 module.exports = class Master extends EventEmitter
-  constructor: ->
-    @pid = process.pid
-
-    @startup = new Date
-    @workers = []
 
   ############################
+  #
+  # Constructor
+  #
+  constructor: ->
 
-  ## Helper for adding properties to prototype
-  __define = (args...) => Object.defineProperty.apply null, [].concat Master.prototype, args
+    # Helper providing definer of values (added to instance)
+    `var __define`
+    __define = (args...) => Object.defineProperty.apply null, [].concat this, args
+
+    # Public constants
+    __define "pid",     enumerable: yes, value: process.pid
+    __define "startup", enumerable: yes, value: do Date.now
+
+    # Private variables
+    __define "workers",  writable: yes, value: []
+
+    __define "state",    writable: yes, value: ''
+    __define "pending",  writable: yes, value: 0
+
+    __define "__killed", writable: yes, value: 0
 
   ############################
   #
   # Define public methods
   #
+
+  # Helper providing definer of methods (added to prototype)
+  __define = (args...) => Object.defineProperty.apply null, [].concat Master.prototype, args
 
   # Register signal
   __define "addSignalListener", enumerable: yes, value: (signal, callback) ->
@@ -38,38 +53,41 @@ module.exports = class Master extends EventEmitter
     return this
 
   # Close one of workers
-  __define "decrease", enumerable: yes, value: (n = 1, signal = "SIGQUIT") ->
+  __define "decrease", enumerable: yes, value: (n = 1) ->
 
     # Limit `n` to proper value
     n = 1 if n <= 0
     n = limit if n > (limit = @workers.length)
 
-    @workers.pop().kill signal while n--
+    do @workers.pop().close while n--
 
     return this
 
   # Restart all workers
   __define "restart", enumerable: yes, value: ->
+    @workers.forEach (worker) ->
+      do worker.close
 
     return this
 
   # Graceful shutdown cluster
   __define "close", enumerable: yes, value: ->
-    @state = 'closing'
-    @kill 'SIGQUIT'
-    @pendingDeaths = @workers.length
+    @state   = 'graceful'
+    @pending = @workers.length
+
+    @workers.forEach (worker) ->
+      do worker.close
 
     return this
 
-  # Hard shutdown cluster
+  # Forceful shutdown cluster
   __define "destroy", enumerable: yes, value: ->
-    @state = 'destroying'
+    @state = 'forceful'
     @kill 'SIGKILL'
-    do @_destroy
 
     return this
 
-  # Kill worker
+  # Send `signal` to all workers, if no `signal` is specified `SIGTERM` is send
   __define "kill", enumerable: yes, value: (signal = "SIGTERM") ->
     @workers.forEach (worker) ->
       worker.kill signal
@@ -80,7 +98,7 @@ module.exports = class Master extends EventEmitter
 
   # Send message to worker with `id`
   __define "publish", enumerable: yes, value: (id, event, parameters...) ->
-    @findWorker(id)?.publish event, parameters
+    @worker(id)?.publish event, parameters
 
     return this
 
@@ -102,39 +120,92 @@ module.exports = class Master extends EventEmitter
     # TODO: Some options and functions here
 
     # Allow to add cluster events to Master instance
-    do @mapEvents
+    do @registerEvents
 
     # Set cluster runtime environment
     cluster.setupMaster { exec : @settings.path, args : @settings.args, silent : @settings.silent }
 
-  # Map cluster events to Master events
-  __define "mapEvents", value: ->
+  # Register cluster events and map them to EventEmitter events
+  __define "registerEvents", value: ->
+    unless @registered
 
-    cluster.on "fork", (worker) =>
-      @emit "fork", @findWorker worker.id
+      cluster.on "fork", (worker) =>
+        worker = @worker worker.id
+        @emit "fork", worker
 
-    cluster.on "online", (worker) =>
-      @emit "online", @findWorker worker.id
 
-    cluster.on "listening", (worker) =>
-      @emit "listening", @findWorker worker.id
+      cluster.on "online", (worker) =>
+        worker = @worker worker.id
+        @emit "online", worker
 
-    cluster.on "disconnect", (worker) =>
-      @emit "disconnect", @findWorker worker.id
 
-    cluster.on "exit", (worker) =>
-      @emit "exit", @findWorker worker.id
+      cluster.on "listening", (worker, address) =>
+        worker = @worker worker.id
+        @emit "listening", worker, address
+
+
+      cluster.on "disconnect", (worker) =>
+        worker = @worker worker.id
+        @emit "disconnect", worker
+
+
+      cluster.on "exit", (worker, code, signal) =>
+        worker = @worker worker.id
+        @emit "exit", worker, code, signal
+
+        @killed worker
+
+    @registered = yes
+
+    return this
 
   # Return worker with specified `id`
-  __define "findWorker", value: (id) ->
-    for worker in @workers
-      return worker if worker.id is id
+  __define "worker", value: (id) ->
+    if id
+      for worker in @workers
+        return worker if worker?.id is id
 
     return null
 
-  ############################
-  #
-  # Define private events
-  #
+  # Maintain worker count, re-spawning if necessary
+  __define "maintenance", value: ->
+    @workers.forEach (worker) ->
+      @killed worker if worker.status is "dead"
 
-  # @.on "", ->
+    return this
+
+  # Remove worker with `id` from `workers` list
+  __define "cleanup", value: (id) ->
+    if id
+      for worker in @workers
+        @workers.splice(_i, 1) if worker?.id is id
+
+    return this
+
+  __define "killed", value: (worker) ->
+
+    # if we have many failing workers at boot
+    # then we likely have a serious issue
+    if Date.now() - @startup < 20000
+      if ++@__killed is 20
+
+        console.error """
+
+                        Detected over 20 worker deaths in the first 20 seconds of life,
+                        there is most likely a serious issue with your server.
+
+                        Aborting!
+
+                      """
+
+        return process.exit 1
+
+    @cleanup worker.id
+
+    # state specifics
+    switch @state
+      when 'graceful' then break
+      when 'forceful' then --@pending or process.nextTick process.exit
+      else do @increase
+
+    return this

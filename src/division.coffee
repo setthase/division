@@ -3,31 +3,40 @@ Master         = require './Master'
 
 # Wrapper around cluster API
 module.exports = class Division extends EventEmitter
+
+  ############################
+  #
+  # Constructor
+  #
   constructor: (settings) ->
-    @environment = process.env.NODE_ENV || 'development'
 
-    @master  = new Master()
-    @version = "0.1.0"
+    # Helper providing definer of values (added to instance)
+    `var __define`
+    __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
-    # Default settings
-    @settings =
-      size : Math.max 2, require('os').cpus().length
+    # Public constants
+    __define "version",     enumerable: yes, value: "0.1.0"
+    __define "environment", enumerable: yes, value: process.env.NODE_ENV || 'development'
+
+    # Public variables
+    __define "settings", enumerable: yes, writable: yes, value: { size : Math.max 2, require('os').cpus().length }
+
+    # Private constants
+    __define "master",  value: new Master()
+
+    # Private variables
+    __define "running", writable: yes, value: off
 
     # Apply user defined settings
     @extend @settings, settings
-
-    # Status of Division
-    @running = no
-
-  ############################
-
-  ## Helper for adding properties to prototype
-  __define = (args...) => Object.defineProperty.apply null, [].concat Division.prototype, args
 
   ############################
   #
   # Define public methods
   #
+
+  # Helper providing definer of methods (added to prototype)
+  __define = (args...) => Object.defineProperty.apply null, [].concat Division.prototype, args
 
   # Configure callback for zero or more environments
   __define "configure", enumerable: yes, value: (environments..., fn)->
@@ -64,20 +73,22 @@ module.exports = class Division extends EventEmitter
   __define "disabled", enumerable: yes, value: (setting)->
     return !@settings[setting]
 
-  # Add extensions
+  # Use the given `extension`
   # __define "use"
 
   # Start cluster process
-  __define "run", enumerable: yes, value: ->
+  __define "run", enumerable: yes, value: (fn) ->
     if not @running
       @master.configure @settings
 
       # Start master process
       process.nextTick =>
         counter = 0
-        do @master.increase while counter++ <= @settings.size
+        do @master.increase while counter++ < @settings.size
 
-      @running = yes
+        fn.call @master, @master if typeof fn is 'function'
+
+    @running = yes
 
     return @master
 
@@ -87,7 +98,7 @@ module.exports = class Division extends EventEmitter
   #
 
   # Check if `obj` is plain Object
-  __define "isPlainObject", value: (obj) ->
+  __define "__object", value: (obj) ->
     return no if typeof obj isnt "object" or obj.nodeType
 
     # The try/catch suppresses exceptions thrown when attempting to access the "constructor" property of certain host objects
@@ -98,8 +109,8 @@ module.exports = class Division extends EventEmitter
 
     return yes
 
-  # Check if `array` is Array
-  __define "isArray", value: (array) ->
+  # Check if `array` is an Array
+  __define "__array", value: (array) ->
     return Array.isArray.call array
 
   # Deeply extend object
@@ -112,15 +123,15 @@ module.exports = class Division extends EventEmitter
       continue if target is copy
 
       # Recursive call if we're merging plain objects or arrays
-      if copy and ( @isPlainObject(copy) or (isArray = @isArray(copy)) )
+      if copy and ( @__object(copy) or (array = @__array(copy)) )
         src = target[key]
 
-        if isArray
-          clone   = if src and @isArray(src) then src else []
-          isArray = no
+        if array
+          clone = if src and @__array(src) then src else []
+          array = no
 
         else
-          clone = if src and @isPlainObject(src) then src else {}
+          clone = if src and @__object(src) then src else {}
 
         # Never move original objects, clone them
         target[key] = @extend clone, copy
