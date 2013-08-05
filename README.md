@@ -6,7 +6,7 @@ Another wrapper for node.js cluster API
 # Usage
 More examples you can find in `examples` directory.
 
-### Standard configuratuion example
+### Standard configuration example
 
 ```javascript
 var division = require('division');
