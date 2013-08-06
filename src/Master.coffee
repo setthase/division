@@ -42,14 +42,19 @@ module.exports = class Master extends EventEmitter
 
   # Register signal
   __define "addSignalListener", enumerable: yes, value: (signal, callback) ->
-    process.on signal, callback.call this
+    process.on signal, callback.bind this
     return this
 
   ## Runtime
 
   # Spawn new worker
   __define "increase", enumerable: yes, value: (n = 1) ->
-    @workers.push new Worker() while n--
+    # Increase size in settings
+    @settings.size += n
+
+    # Spawn missing workers
+    do @spawn while n--
+
     return this
 
   # Close one of workers
@@ -59,6 +64,10 @@ module.exports = class Master extends EventEmitter
     n = 1 if n <= 0
     n = limit if n > (limit = @workers.length)
 
+    # Decrease size in settings
+    @settings.size -= n
+
+    # Close oversized workers
     do @workers.pop().close while n--
 
     return this
@@ -94,6 +103,13 @@ module.exports = class Master extends EventEmitter
 
     return this
 
+  # Maintain worker count, re-spawning if necessary
+  __define "maintenance", enumerable: yes, value: ->
+    @workers.forEach (worker) ->
+      @killed worker if worker.status is "dead"
+
+    return this
+
   ## Communication
 
   # Send message to worker with `id`
@@ -124,6 +140,11 @@ module.exports = class Master extends EventEmitter
 
     # Set cluster runtime environment
     cluster.setupMaster { exec : @settings.path, args : @settings.args, silent : @settings.silent }
+
+  # Spawn another worker if workers count is below size in settings
+  __define "spawn", value: ->
+    @workers.push new Worker() if @workers.length < @settings.size
+    return this
 
   # Register cluster events and map them to EventEmitter events
   __define "registerEvents", value: ->
@@ -167,13 +188,6 @@ module.exports = class Master extends EventEmitter
 
     return null
 
-  # Maintain worker count, re-spawning if necessary
-  __define "maintenance", value: ->
-    @workers.forEach (worker) ->
-      @killed worker if worker.status is "dead"
-
-    return this
-
   # Remove worker with `id` from `workers` list
   __define "cleanup", value: (id) ->
     if id
@@ -183,6 +197,8 @@ module.exports = class Master extends EventEmitter
     return this
 
   __define "killed", value: (worker) ->
+
+    console.log worker
 
     # if we have many failing workers at boot
     # then we likely have a serious issue
@@ -200,12 +216,12 @@ module.exports = class Master extends EventEmitter
 
         return process.exit 1
 
-    @cleanup worker.id
+    @cleanup worker?.id
 
     # state specifics
     switch @state
       when 'graceful' then break
       when 'forceful' then --@pending or process.nextTick process.exit
-      else do @increase
+      else do @spawn
 
     return this

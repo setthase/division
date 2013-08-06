@@ -22,6 +22,9 @@ cluster.configure(function () {
 // You can also set settings without configuration block
 cluster.set('size', 2);
 
+// Use extensions
+cluster.use('signals');
+
 // Start your application as a cluster!
 cluster.run(function () {
   // `this` is the Master instance

@@ -1,3 +1,4 @@
+fs             = require 'fs'
 Master         = require './Master'
 {EventEmitter} = require 'events'
 
@@ -74,7 +75,13 @@ module.exports = class Division extends EventEmitter
     return !@settings[setting]
 
   # Use the given `extension`
-  # __define "use"
+  __define "use", enumerable: yes, value: (extension, parameters...) ->
+    if typeof extension is "string"
+      extension = require @resolve extension
+
+    extension.apply @master, parameters
+
+    return this
 
   # Start cluster process
   __define "run", enumerable: yes, value: (fn) ->
@@ -84,7 +91,7 @@ module.exports = class Division extends EventEmitter
       # Start master process
       process.nextTick =>
         counter = 0
-        do @master.increase while counter++ < @settings.size
+        do @master.spawn while counter++ < @settings.size
 
         fn.call @master, @master if typeof fn is 'function'
 
@@ -97,21 +104,15 @@ module.exports = class Division extends EventEmitter
   # Define private methods
   #
 
-  # Check if `obj` is plain Object
-  __define "__object", value: (obj) ->
-    return no if typeof obj isnt "object" or obj.nodeType
+  # Check if `path` is plain Object
+  __define "resolve", value: do ->
+    extensions = fs.readdirSync(__dirname + '/extensions').map (file) -> file.split(".")[0]
 
-    # The try/catch suppresses exceptions thrown when attempting to access the "constructor" property of certain host objects
-    try
-        return no if obj.constructor and not Object.hasOwnProperty.call obj.constructor.prototype, "isPrototypeOf"
-    catch
-        return no
-
-    return yes
-
-  # Check if `array` is an Array
-  __define "__array", value: (array) ->
-    return Array.isArray.call array
+    return (extension) ->
+      if extensions.indexOf(extension) > -1
+        return __dirname + '/extensions/' + extension
+      else
+        return extension
 
   # Deeply extend object
   __define "extend", value : (target, source) ->
@@ -141,3 +142,19 @@ module.exports = class Division extends EventEmitter
         target[key] = copy
 
     return target
+
+  # Check if `obj` is plain Object
+  __define "__object", value: (obj) ->
+    return no if typeof obj isnt "object" or obj.nodeType
+
+    # The try/catch suppresses exceptions thrown when attempting to access the "constructor" property of certain host objects
+    try
+        return no if obj.constructor and not Object.hasOwnProperty.call obj.constructor.prototype, "isPrototypeOf"
+    catch
+        return no
+
+    return yes
+
+  # Check if `array` is an Array
+  __define "__array", value: (array) ->
+    return Array.isArray.call array
