@@ -23,6 +23,7 @@ cluster.configure(function () {
 cluster.set('size', 2);
 
 // Use extensions
+cluster.use('debug');
 cluster.use('signals');
 
 // Start your application as a cluster!

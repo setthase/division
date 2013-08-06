@@ -1,3 +1,4 @@
+# Libraries
 fs             = require 'fs'
 Master         = require './Master'
 {EventEmitter} = require 'events'
@@ -16,11 +17,11 @@ module.exports = class Division extends EventEmitter
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Public constants
-    __define "version",     enumerable: yes, value: "0.1.0"
+    __define "version",     enumerable: yes, value: "0.3.0"
     __define "environment", enumerable: yes, value: process.env.NODE_ENV || 'development'
 
     # Public variables
-    __define "settings", enumerable: yes, writable: yes, value: { size : Math.max 2, require('os').cpus().length }
+    __define "settings", enumerable: yes, writable: yes, value: { extensions : [], size : Math.max 2, require('os').cpus().length }
 
     # Private constants
     __define "master",  value: new Master()
@@ -77,6 +78,8 @@ module.exports = class Division extends EventEmitter
   # Use the given `extension`
   __define "use", enumerable: yes, value: (extension, parameters...) ->
     if typeof extension is "string"
+      @settings.extensions.push extension
+
       extension = require @resolve extension
 
     extension.apply @master, parameters

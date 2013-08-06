@@ -1,3 +1,4 @@
+# Libraries
 Worker         = require './Worker'
 cluster        = require 'cluster'
 {EventEmitter} = require 'events'
@@ -72,8 +73,13 @@ module.exports = class Master extends EventEmitter
     # Decrease size in settings
     @settings.size -= n
 
+    # Set index for workers
+    index = limit - n
+
     # Close oversized workers
-    do @workers.pop().close while n--
+    while n--
+      do @workers[index].close
+      index++
 
     return this
 
@@ -216,14 +222,20 @@ module.exports = class Master extends EventEmitter
     if Date.now() - @startup < 20000
       if ++@__killed is 20
 
-        console.error """
+        message = """
 
-                        Detected over 20 worker deaths in the first 20 seconds of life,
-                        there is most likely a serious issue with your server.
+                    Detected over 20 worker deaths in the first 20 seconds of life,
+                    there is most likely a serious issue with your server.
 
-                        Aborting!
+                    Aborting!
 
-                      """
+                  """
+
+        if @settings.extensions.indexOf('debug') > -1
+          @emit.call this, "error", "\n#{message}"
+
+        else
+          console.error message
 
         return process.exit 1
 

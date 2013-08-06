@@ -1,6 +1,6 @@
 {
   "name": "division",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Another wrapper for node cluster API",
   "main": "lib/division.js",
   "engines": {
@@ -18,7 +18,14 @@
   },
   "keywords": [
     "cluster",
-    "manager"
+    "manager",
+    "master",
+    "workers",
+    "supervisor",
+    "fork",
+    "spawn",
+    "multi-core",
+    "child-process"
   ],
   "readmeFilename": "README.md",
   "author": "codename-",
