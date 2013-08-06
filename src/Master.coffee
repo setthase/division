@@ -27,6 +27,7 @@ module.exports = class Master extends EventEmitter
 
     # Private variables
     __define "workers",  writable: yes, value: []
+    __define "settings", writable: yes, value: {}
 
     __define "state",    writable: yes, value: ''
     __define "pending",  writable: yes, value: 0

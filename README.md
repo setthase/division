@@ -49,7 +49,7 @@ You can set environment while launching application - in this way:
 NODE_ENV=production node cluster.js
 ```
 
-### Minimum configuration example
+### Minimal configuration example
 
 ```javascript
 var division = require('division');
@@ -61,4 +61,130 @@ cluster.set('path', 'app.js').run();
 
 # API Reference
 
-... coming soon ...
+## Division class
+
+### Attributes
+
+###### version
+
+###### environment
+
+###### settings
+
+### Methods
+
+###### configure
+
+###### set
+
+###### get
+
+###### use
+
+###### enable
+
+###### disable
+
+###### enabled
+
+###### disabled
+
+###### run
+
+## Master class
+
+` Master ` is returned when you call ` run ` method from ` Division ` and it is also set as a scope for callback function of this method.
+
+### Attributes
+
+` Master ` provide these public attributes
+
+###### pid
+
+###### startup
+
+### Methods
+
+` Master ` provide these public methods
+
+###### addSignalListener
+
+###### increase
+
+###### decrease
+
+###### restart
+
+###### close
+
+###### destroy
+
+###### kill
+
+###### maintenance
+
+###### publish
+
+###### broadcast
+
+### Events
+
+` Master ` inherit his prototype from `EventEmitter` and emit these events
+
+###### error
+
+###### increase
+
+###### decrease
+
+###### restart
+
+###### close
+
+###### destroy
+
+###### fork
+
+###### online
+
+###### listening
+
+###### disconnect
+
+###### exit
+
+## Worker class
+
+` Worker ` is returned in some of ` Master ` events
+
+### Attributes
+
+` Worker ` provide these public attributes
+
+###### id
+
+###### pid
+
+###### startup
+
+###### status
+
+### Methods
+
+` Worker ` provide these public methods
+
+###### close
+
+###### kill
+
+###### publish
+
+### Events
+
+` Worker ` inherit his prototype from `EventEmitter` and emit these events
+
+###### close
+
+###### kill
+
+###### publish
