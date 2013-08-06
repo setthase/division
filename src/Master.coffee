@@ -49,6 +49,9 @@ module.exports = class Master extends EventEmitter
 
   # Spawn new worker
   __define "increase", enumerable: yes, value: (n = 1) ->
+    # Emit 'increase' event
+    @emit.call this, "increase"
+
     # Increase size in settings
     @settings.size += n
 
@@ -59,6 +62,8 @@ module.exports = class Master extends EventEmitter
 
   # Close one of workers
   __define "decrease", enumerable: yes, value: (n = 1) ->
+    # Emit 'decrease' event
+    @emit.call this, "decrease"
 
     # Limit `n` to proper value
     n = 1 if n <= 0
@@ -74,6 +79,9 @@ module.exports = class Master extends EventEmitter
 
   # Restart all workers
   __define "restart", enumerable: yes, value: ->
+    # Emit 'restart' event
+    @emit.call this, "restart"
+
     @workers.forEach (worker) ->
       do worker.close
 
@@ -81,6 +89,9 @@ module.exports = class Master extends EventEmitter
 
   # Graceful shutdown cluster
   __define "close", enumerable: yes, value: ->
+    # Emit 'close' event
+    @emit.call this, "close"
+
     @state   = 'graceful'
     @pending = @workers.length
 
@@ -91,6 +102,9 @@ module.exports = class Master extends EventEmitter
 
   # Forceful shutdown cluster
   __define "destroy", enumerable: yes, value: ->
+    # Emit 'destroy' event
+    @emit.call this, "destroy"
+
     @state = 'forceful'
     @kill 'SIGKILL'
 
@@ -152,27 +166,27 @@ module.exports = class Master extends EventEmitter
 
       cluster.on "fork", (worker) =>
         worker = @worker worker.id
-        @emit "fork", worker
+        @emit.call this, "fork", worker
 
 
       cluster.on "online", (worker) =>
         worker = @worker worker.id
-        @emit "online", worker
+        @emit.call this, "online", worker
 
 
       cluster.on "listening", (worker, address) =>
         worker = @worker worker.id
-        @emit "listening", worker, address
+        @emit.call this, "listening", worker, address
 
 
       cluster.on "disconnect", (worker) =>
         worker = @worker worker.id
-        @emit "disconnect", worker
+        @emit.call this, "disconnect", worker
 
 
       cluster.on "exit", (worker, code, signal) =>
         worker = @worker worker.id
-        @emit "exit", worker, code, signal
+        @emit.call this, "exit", worker, code, signal
 
         @killed worker
 
@@ -197,9 +211,6 @@ module.exports = class Master extends EventEmitter
     return this
 
   __define "killed", value: (worker) ->
-
-    console.log worker
-
     # if we have many failing workers at boot
     # then we likely have a serious issue
     if Date.now() - @startup < 20000

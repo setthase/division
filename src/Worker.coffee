@@ -39,7 +39,13 @@ module.exports = class Worker extends EventEmitter
 
   # Gracefully close worker - if worker doesn't close within `timeout`, then it would be forcefully killed
   __define "close", enumerable: yes, value: (timeout = 2000) ->
+    # Emit 'close' event
+    @emit.call this, "close"
+
+    # Disconnect worker
     do @instance.disconnect
+
+    # Set timeout for forcefully close worker
     setTimeout =>
       @kill "SIGKILL" if @status is not "dead"
     , timeout
@@ -48,6 +54,10 @@ module.exports = class Worker extends EventEmitter
 
   # Send `signal` to worker - if `signal` is not specified then send `SIGTERM`
   __define "kill", enumerable: yes, value: (signal = "SIGTERM") ->
+    # Emit 'kill' event
+    @emit.call this, "kill"
+
+    # Send signal to worker in next tick
     process.nextTick =>
       @instance.kill signal
 
@@ -55,8 +65,13 @@ module.exports = class Worker extends EventEmitter
 
   # Send message to worker instance
   __define "publish", enumerable: yes, value: (event, parameters...) ->
+    # Emit 'publish' event
+    @emit.call this, "publish"
+
+    # Parse parameters array
     if parameters.length is 1 then parameters = parameters[0]
 
+    # Send message to worker
     @instance.send { event, parameters }
 
     return this
