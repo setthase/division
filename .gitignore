@@ -1,5 +1,4 @@
 # Ignore this directories
-lib
 node_modules
 
 # Ignore npm log file
