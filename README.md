@@ -1,9 +1,31 @@
 division
 ========
 
-Another wrapper for node.js cluster API
+Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.  
+This module is inspired by impressive but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [visionmedia](https://github.com/visionmedia) (TJ Holowaychuk).
 
-# Usage
+## Installation
+
+```bash
+npm install division
+```
+
+## Features
+
+The most valuable feature: you don't need to change your code to working within cluster.
+
+Other features:
+  -  standalone (without 3rd-party dependencies)
+  -  zero-downtime restart
+  -  maintains worker count
+  -  forceful shutdown support
+  -  graceful shutdown support
+  -  bundled extensions
+     -  debug: enable verbose debugging informations
+     -  signals: add ability to control cluster with POSIX signals
+
+## Example
+
 More examples you can find in `examples` directory.
 
 ### Standard configuration example
@@ -59,11 +81,11 @@ var cluster = new division();
 cluster.set('path', 'app.js').run();
 ```
 
-# API Reference
+## API Reference
 
-## Division class
+### Division class
 
-### Attributes
+#### Attributes
 
 ###### version
 
@@ -71,7 +93,7 @@ cluster.set('path', 'app.js').run();
 
 ###### settings
 
-### Methods
+#### Methods
 
 ###### configure
 
@@ -91,11 +113,11 @@ cluster.set('path', 'app.js').run();
 
 ###### run
 
-## Master class
+### Master class
 
 ` Master ` is returned when you call ` run ` method from ` Division ` and it is also set as a scope for callback function of this method.
 
-### Attributes
+#### Attributes
 
 ` Master ` provide these public attributes
 
@@ -103,7 +125,7 @@ cluster.set('path', 'app.js').run();
 
 ###### startup
 
-### Methods
+#### Methods
 
 ` Master ` provide these public methods
 
@@ -127,7 +149,7 @@ cluster.set('path', 'app.js').run();
 
 ###### broadcast
 
-### Events
+#### Events
 
 ` Master ` inherit his prototype from `EventEmitter` and emit these events
 
@@ -153,11 +175,11 @@ cluster.set('path', 'app.js').run();
 
 ###### exit
 
-## Worker class
+### Worker class
 
 ` Worker ` is returned in some of ` Master ` events
 
-### Attributes
+#### Attributes
 
 ` Worker ` provide these public attributes
 
@@ -169,7 +191,7 @@ cluster.set('path', 'app.js').run();
 
 ###### status
 
-### Methods
+#### Methods
 
 ` Worker ` provide these public methods
 
@@ -179,7 +201,7 @@ cluster.set('path', 'app.js').run();
 
 ###### publish
 
-### Events
+#### Events
 
 ` Worker ` inherit his prototype from `EventEmitter` and emit these events
 

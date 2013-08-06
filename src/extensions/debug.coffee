@@ -5,7 +5,7 @@ logger = require './helpers/logger'
 #
 # ~ division debug ~
 #
-# Extension enable verbose debugging output
+# Extension enable verbose debugging informations
 #
 
 module.exports =  (options) ->
