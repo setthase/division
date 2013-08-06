@@ -3,21 +3,31 @@
   "version": "0.1.0",
   "description": "Another wrapper for node cluster API",
   "main": "lib/division.js",
-  "scripts": {
-    "test": "mocha"
+  "engines": {
+    "node": ">= 0.10.0"
   },
-  "repository": "",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "bugs": {
+    "url": "http://github.com/codename-/division/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/codename-/division.git"
+  },
   "keywords": [
     "cluster",
     "manager"
   ],
+  "readmeFilename": "README.md",
   "author": "codename-",
   "license": "MIT",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-coffee": "~0.7.0",
-    "mocha": "*",
+    "mocha": "~1.12.0",
     "should": "~0.6.3"
   }
 }
