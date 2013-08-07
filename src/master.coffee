@@ -1,5 +1,5 @@
-# Libraries
-Worker         = require './Worker'
+# Require dependencies
+Worker         = require './worker'
 cluster        = require 'cluster'
 {EventEmitter} = require 'events'
 
@@ -52,7 +52,7 @@ module.exports = class Master extends EventEmitter
   # Spawn new worker
   __define "increase", enumerable: yes, value: (n = 1) ->
     # Emit 'increase' event
-    @emit.call this, "increase"
+    @emit.call this, "increase", n
 
     # Increase size in settings
     @settings.size += n
@@ -64,12 +64,12 @@ module.exports = class Master extends EventEmitter
 
   # Close one of workers
   __define "decrease", enumerable: yes, value: (n = 1) ->
-    # Emit 'decrease' event
-    @emit.call this, "decrease"
-
     # Limit `n` to proper value
     n = 1 if n <= 0
     n = limit if n > (limit = @workers.length)
+
+    # Emit 'decrease' event
+    @emit.call this, "decrease", n
 
     # Decrease size in settings
     @settings.size -= n
@@ -192,10 +192,10 @@ module.exports = class Master extends EventEmitter
 
 
       cluster.on "exit", (worker, code, signal) =>
-        worker = @worker worker.id
-        @emit.call this, "exit", worker, code, signal
+        if worker = @worker worker.id
+          @emit.call this, "exit", worker, code, signal
 
-        @killed worker
+          @killed worker
 
     @registered = yes
 
@@ -221,7 +221,7 @@ module.exports = class Master extends EventEmitter
     # if we have many failing workers at boot
     # then we likely have a serious issue
     if Date.now() - @startup < 20000
-      if ++@__killed is 20
+      if ++@__killed > 20
 
         message = """
 
@@ -232,13 +232,13 @@ module.exports = class Master extends EventEmitter
 
                   """
 
-        if @settings.extensions.indexOf('debug') > -1
+        if ~ @settings.extensions.indexOf 'debug'
           @emit.call this, "error", "\n#{message}"
 
         else
-          console.error message
+          process.stderr.write message
 
-        return process.exit 1
+        return process.exit 2
 
     @cleanup worker?.id
 

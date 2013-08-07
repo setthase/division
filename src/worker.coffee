@@ -1,4 +1,5 @@
-# Libraries
+# Require dependencies
+{exec}         = require 'child_process'
 cluster        = require 'cluster'
 {EventEmitter} = require 'events'
 
@@ -48,7 +49,10 @@ module.exports = class Worker extends EventEmitter
 
     # Set timeout for forcefully close worker
     setTimeout =>
-      @kill "SIGKILL" if @status is not "dead"
+      unless @status is "dead"
+        # Use POSIX command `kill(1)` to definitely kill process
+        exec "kill -s kill #{@.pid}", ->
+
     , timeout
 
     return this

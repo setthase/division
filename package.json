@@ -1,13 +1,20 @@
 {
   "name": "division",
-  "version": "0.3.0",
-  "description": "Simple and powerful wrapper over node.js cluster API.\nThis module is inspired by impressive but abandoned project Cluster created by visionmedia (TJ Holowaychuk).",
+  "version": "0.4.0",
+  "description": "Simple and powerful wrapper over node.js cluster API.\r\nThis module is inspired by impressive but abandoned project Cluster created by visionmedia (TJ Holowaychuk).",
+  "author": "codename-",
   "main": "lib/division.js",
+  "devDependencies": {
+    "coffee-script": "~1.6.3",
+    "mocha": "~1.12.0",
+    "should": "~0.6.3"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "prepublish": "./node_modules/.bin/cake compile",
+    "test": "./node_modules/.bin/mocha"
   },
   "bugs": {
     "url": "http://github.com/codename-/division/issues"
@@ -27,14 +34,5 @@
     "multi-core",
     "child-process"
   ],
-  "readmeFilename": "README.md",
-  "author": "codename-",
-  "license": "MIT",
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-coffee": "~0.7.0",
-    "mocha": "~1.12.0",
-    "should": "~0.6.3"
-  }
+  "license": "MIT"
 }

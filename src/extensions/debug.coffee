@@ -1,4 +1,4 @@
-# Libraries
+# Require dependencies
 logger = require './helpers/logger'
 
 ############################
@@ -17,11 +17,11 @@ module.exports =  (options) ->
   @on "error", (error) ->
     logger.error error, options
 
-  @on "increase", ->
-    logger.info "Number of workers increased", options
+  @on "increase", (amount) ->
+    logger.info "Number of workers increased by #{amount}", options
 
-  @on "decrease", ->
-    logger.info "Number of workers decreased", options
+  @on "decrease", (amount) ->
+    logger.info "Number of workers decreased by #{amount}", options
 
   @on "restart", ->
     logger.info "Worker processes restarted", options
@@ -37,26 +37,30 @@ module.exports =  (options) ->
     logger.debug "New worker forked", options
 
   @on "online", (worker) ->
-    logger.debug "Worker ##{worker.id} (PID: #{worker.pid}) is online", options
+    logger.debug "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is online", options
 
   @on "listening", (worker, address) ->
-    logger.debug "Worker ##{worker.id} (PID: #{worker.pid}) is listening", options
+    logger.debug "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is listening", options
 
   @on "disconnect", (worker) ->
-    logger.debug "Worker ##{worker.id} (PID: #{worker.pid}) is disconnected", options
+    logger.debug "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is disconnected", options
 
   @on "exit", (worker, code, signal) ->
     if worker.instance.suicide
-      logger.debug "Worker ##{worker.id} (PID: #{worker.pid}) is exited", options
+      logger.debug "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is exited", options
     else
-      logger.error "Worker ##{worker.id} (PID: #{worker.pid}) is exited unexpectedly (code: #{code}, signal: #{signal})", options
+      logger.error "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is exited unexpectedly (code: #{code}, signal: #{signal})", options
 
   # Log process events
   process.on "uncaughtException", (error) ->
-    logger.error error, options
+    logger.error error.stack, options
     process.exit 1
 
   process.on "exit", ->
     logger.debug "Cluster process exited", options
+
+  # Log extensions events
+  @on "filechange", (file) ->
+    logger.debug "#{file} was changed", options
 
   return this

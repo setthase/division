@@ -1,10 +1,10 @@
-## Libraries
+## Require dependencies
 fs = require 'fs'
 
-## Helpers
+## Define helpers
+
 # Join elements to one string
-glue = (elements...) ->
-  elements.join ''
+glue = (elements...) -> elements.join ''
 
 # Change length of `value` by changing string offset by `sign` prefix
 offset = (value, sign, length) ->

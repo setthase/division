@@ -1,6 +1,7 @@
-# Libraries
+# Require dependencies
 fs             = require 'fs'
-Master         = require './Master'
+Master         = require './master'
+cluster        = require 'cluster'
 {EventEmitter} = require 'events'
 
 # Wrapper around cluster API
@@ -17,7 +18,7 @@ module.exports = class Division extends EventEmitter
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Public constants
-    __define "version",     enumerable: yes, value: "0.3.0"
+    __define "version",     enumerable: yes, value: "0.4.0"
     __define "environment", enumerable: yes, value: process.env.NODE_ENV || 'development'
 
     # Public variables
@@ -46,7 +47,7 @@ module.exports = class Division extends EventEmitter
     return this if not fn or typeof fn isnt 'function'
 
     # Check if this.environment is in environments list
-    if environments.length is 0 or ~environments.indexOf @environment then fn.call this
+    if environments.length is 0 or ~ environments.indexOf @environment then fn.call this
 
     return this
 
@@ -77,10 +78,15 @@ module.exports = class Division extends EventEmitter
 
   # Use the given `extension`
   __define "use", enumerable: yes, value: (extension, parameters...) ->
+    return this if not extension
+
     if typeof extension is "string"
       @settings.extensions.push extension
 
-      extension = require @resolve extension
+      try
+        extension = require @resolve extension
+      catch
+        extension = ->
 
     extension.apply @master, parameters
 
@@ -88,6 +94,18 @@ module.exports = class Division extends EventEmitter
 
   # Start cluster process
   __define "run", enumerable: yes, value: (fn) ->
+
+    if cluster.isWorker
+      message = "You cannot run cluster in worker process!\n"
+
+      if ~ @settings.extensions.indexOf 'debug'
+        @emit.call this, "error", "\n#{message}"
+
+      else
+        process.stderr.write message
+
+      return process.exit 3
+
     if not @running
       @master.configure @settings
 
@@ -112,7 +130,7 @@ module.exports = class Division extends EventEmitter
     extensions = fs.readdirSync(__dirname + '/extensions').map (file) -> file.split(".")[0]
 
     return (extension) ->
-      if extensions.indexOf(extension) > -1
+      if ~ extensions.indexOf extension
         return __dirname + '/extensions/' + extension
       else
         return extension

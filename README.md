@@ -1,13 +1,26 @@
-division
+division [![Build Status](https://travis-ci.org/codename-/division.png)](https://travis-ci.org/codename-/division)
 ========
 
-Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.  
-This module is inspired by impressive but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [visionmedia](https://github.com/visionmedia) (TJ Holowaychuk).
+Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.
+This module is inspired by impressive but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [@visionmedia](https://github.com/visionmedia).
 
 ## Installation
 
 ```bash
-npm install division
+$ npm install division
+```
+#### Running Tests
+
+First go to module directory and install development dependencies:
+
+```bash
+$ npm install
+```
+
+Then you can test module typing:
+
+```bash
+$ npm test
 ```
 
 ## Features
@@ -15,14 +28,14 @@ npm install division
 The most valuable feature: you don't need to change your code to working within cluster.
 
 Other features:
-  -  standalone (without 3rd-party dependencies)
-  -  zero-downtime restart
-  -  maintains worker count
-  -  forceful shutdown support
-  -  graceful shutdown support
-  -  bundled extensions
-     -  debug: enable verbose debugging informations
-     -  signals: add ability to control cluster with POSIX signals
+  -   standalone (without 3rd-party dependencies)
+  -   zero-downtime restart
+  -   maintains worker count
+  -   forceful shutdown support
+  -   graceful shutdown support
+  -   bundled extensions
+      -   debug: enable verbose debugging informations
+      -   signals: add ability to control cluster with POSIX signals
 
 ## Example
 
@@ -67,8 +80,8 @@ cluster.run(function () {
 
 You can set environment while launching application - in this way:
 
-```
-NODE_ENV=production node cluster.js
+```bash
+$ NODE_ENV=production node cluster.js
 ```
 
 ### Minimal configuration example

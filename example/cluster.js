@@ -1,4 +1,5 @@
 var division = require('..');
+var _cluster_ = require('cluster');
 var cluster = new division();
 
 // Configuration for development environment
@@ -16,7 +17,7 @@ cluster.configure('production', function () {
 // Configuration for all environments
 // TIP: this is pointing to cluster
 cluster.configure(function () {
-  this.set('path', 'server.js');
+  this.set('path', './noop.js');
 });
 
 // You can also set settings without configuration block
@@ -25,10 +26,17 @@ cluster.set('size', 2);
 // Use extensions
 cluster.use('debug');
 cluster.use('signals');
+cluster.use('watch', [__dirname], { ignored : ['src'] });
 
 // Start your application as a cluster!
 cluster.run(function () {
   // `this` is the Master instance
+  var master = this;
+
+  master.increase(5)
+
+  setTimeout(function () {
+    master.decrease(5)
+  }, 1000);
 
 });
-
