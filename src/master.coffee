@@ -105,6 +105,8 @@ module.exports = class Master extends EventEmitter
     @workers.forEach (worker) ->
       do worker.close
 
+    do @deregisterEvents
+
     return this
 
   # Forceful shutdown cluster
@@ -114,6 +116,8 @@ module.exports = class Master extends EventEmitter
 
     @state = 'forceful'
     @kill 'SIGKILL'
+
+    do @deregisterEvents
 
     return this
 
@@ -197,6 +201,16 @@ module.exports = class Master extends EventEmitter
 
     return this
 
+    # Register cluster events and map them to EventEmitter events
+  __define "deregisterEvents", value: ->
+    if @registered
+
+      do cluster.removeAllListeners
+
+      @registered = no
+
+    return this
+
   # Return worker with specified `id`
   __define "worker", value: (id) ->
     if id
@@ -234,9 +248,9 @@ module.exports = class Master extends EventEmitter
         else
           process.stderr.write message
 
-        return process.exit 2
+        return process.exit 1
 
-    @cleanup worker?.id
+    @cleanup worker.id
 
     # state specifics
     switch @state
