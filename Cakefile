@@ -1,6 +1,6 @@
 {exec, spawn} = require 'child_process'
 
-option "", "--reporter [reporter]", "reporter type for tests"
+option "-r", "--reporter [REPORTER]", "reporter type for tests"
 
 #############################
 compiled = no
@@ -38,7 +38,10 @@ task "compile", "Compile files from '/src' directory into '/lib' directory", ->
 
 task "test", "Run `mocha` test suite", (options) ->
 
-  if options.reporter then parameters = ["--reporter", options.reporter]
+  parameters = ['--recursive']
+
+  if options.reporter
+    parameters = parameters.concat "--reporter", options.reporter
 
   mocha = spawn "./node_modules/.bin/mocha", parameters
 

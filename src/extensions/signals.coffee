@@ -24,6 +24,7 @@ module.exports =  ->
   @addSignalListener 'SIGTTOU', @decrease
 
   # Check for consistency of workers count
-  @addSignalListener 'SIGCHLD', @maintenance
+  @addSignalListener 'SIGHUP', =>
+    console.log @workers.length, @settings.size
 
   return this

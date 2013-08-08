@@ -31,6 +31,9 @@ module.exports = class Worker extends EventEmitter
     __define "status",  enumerable: yes, set: (->), get : ->
       return @instance.state
 
+    # Private variables
+    __define "decreased", writable: yes, value: no
+
   ############################
   #
   # Define public methods
@@ -40,12 +43,15 @@ module.exports = class Worker extends EventEmitter
   __define = (args...) => Object.defineProperty.apply null, [].concat Worker.prototype, args
 
   # Gracefully close worker - if worker doesn't close within `timeout`, then it would be forcefully killed
-  __define "close", enumerable: yes, value: (timeout = 2000) ->
+  __define "close", enumerable: yes, value: (timeout = 2000, decrease) ->
     # Emit 'close' event
     @emit.call this, "close"
 
+    # Set decreased flag
+    @decreased = yes if decrease
+
     # Disconnect worker
-    do @instance.disconnect
+    try do @instance.disconnect unless @status is "disconnected" or @status is "dead"
 
     # Set timeout for forcefully close worker
     setTimeout =>
@@ -64,7 +70,7 @@ module.exports = class Worker extends EventEmitter
 
     # Send signal to worker in next tick
     process.nextTick =>
-      @instance.kill signal
+      try @instance.kill signal
 
     return this
 
@@ -77,6 +83,6 @@ module.exports = class Worker extends EventEmitter
     if parameters.length is 1 then parameters = parameters[0]
 
     # Send message to worker
-    @instance.send { event, parameters }
+    try @instance.send { event, parameters }
 
     return this

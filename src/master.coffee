@@ -79,7 +79,7 @@ module.exports = class Master extends EventEmitter
 
     # Close oversized workers
     while n--
-      do @workers[index].close
+      @workers[index].close @settings.timeout, yes
       index++
 
     return this
@@ -89,8 +89,8 @@ module.exports = class Master extends EventEmitter
     # Emit 'restart' event
     @emit.call this, "restart"
 
-    @workers.forEach (worker) ->
-      do worker.close
+    @workers.forEach (worker) =>
+      worker.close @settings.timeout
 
     return this
 
@@ -102,8 +102,8 @@ module.exports = class Master extends EventEmitter
     @state   = 'graceful'
     @pending = @workers.length
 
-    @workers.forEach (worker) ->
-      do worker.close
+    @workers.forEach (worker) =>
+      worker.close @settings.timeout
 
     do @deregisterEvents
 
@@ -130,8 +130,17 @@ module.exports = class Master extends EventEmitter
 
   # Maintain worker count, re-spawning if necessary
   __define "maintenance", enumerable: yes, value: ->
-    @workers.forEach (worker) ->
-      @killed worker if worker.status is "dead"
+    if @workers.length < @settings.size
+      n = @settings.size - @workers.length
+      do @spawn while n--
+
+    if @workers.length > @settings.size
+      n = @workers.length - @settings.size
+      index = @settings.size
+
+      while n--
+        @workers[index].close @timeout, yes
+        index++
 
     return this
 
@@ -163,12 +172,15 @@ module.exports = class Master extends EventEmitter
     # Allow to add cluster events to Master instance
     do @registerEvents
 
+    # Check for consistency of workers count
+    @addSignalListener 'SIGCHLD', @maintenance
+
     # Set cluster runtime environment
     cluster.setupMaster { exec : @settings.path, args : @settings.args, silent : @settings.silent }
 
   # Spawn another worker if workers count is below size in settings
-  __define "spawn", value: ->
-    @workers.push new Worker() if @workers.length < @settings.size
+  __define "spawn", value: (force)->
+    @workers.push new Worker() if @workers.length < @settings.size or force
     return this
 
   # Register cluster events and map them to EventEmitter events
@@ -176,26 +188,35 @@ module.exports = class Master extends EventEmitter
     unless @registered
 
       cluster.on "fork", (worker) =>
-        worker = @worker worker.id
-        @emit.call this, "fork", worker
+        if worker = @worker worker.id
+          @emit.call this, "fork", worker
 
       cluster.on "online", (worker) =>
-        worker = @worker worker.id
-        @emit.call this, "online", worker
+        if worker = @worker worker.id
+          @emit.call this, "online", worker
 
       cluster.on "listening", (worker, address) =>
-        worker = @worker worker.id
-        @emit.call this, "listening", worker, address
+        if worker = @worker worker.id
+          @emit.call this, "listening", worker, address
 
       cluster.on "disconnect", (worker) =>
-        worker = @worker worker.id
-        @emit.call this, "disconnect", worker
+        if worker = @worker worker.id
+          @emit.call this, "disconnect", worker
+
+          unless worker.decreased then @spawn yes
 
       cluster.on "exit", (worker, code, signal) =>
         if worker = @worker worker.id
           @emit.call this, "exit", worker, code, signal
 
           @killed worker
+
+      cluster.on "error", (error) =>
+        @emit.call this, "error", error.stack
+
+      @on "error", (error) =>
+        unless ~ @settings.extensions.indexOf 'debug'
+          process.stderr.write message
 
     @registered = yes
 
@@ -206,7 +227,6 @@ module.exports = class Master extends EventEmitter
     if @registered
 
       do cluster.removeAllListeners
-
       @registered = no
 
     return this
@@ -223,7 +243,7 @@ module.exports = class Master extends EventEmitter
   __define "cleanup", value: (id) ->
     if id
       for worker in @workers
-        @workers.splice(_i, 1) if worker?.id is id
+        @workers.splice(_i, 1) if worker?.id is id or worker is null
 
     return this
 

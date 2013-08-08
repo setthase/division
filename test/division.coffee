@@ -1,7 +1,7 @@
 # Require dependencies
 should   = require 'should'
-Master   = require '../lib/master'
-Division = require '..'
+Master   = require  __dirname + '/../lib/master'
+Division = require  __dirname + '/..'
 division = new Division({ path: __dirname + '/../example/noop.js' })
 
 ############################
@@ -158,4 +158,7 @@ describe 'Class Division', ->
     describe 'run', ->
 
       it 'should return Master class', ->
-        division.run().should.be.an.instanceof Master
+        master = do division.run
+        master.should.be.an.instanceof Master
+
+        do master.destroy

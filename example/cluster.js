@@ -31,12 +31,5 @@ cluster.use('watch', [__dirname], { ignored : ['src'] });
 // Start your application as a cluster!
 cluster.run(function () {
   // `this` is the Master instance
-  var master = this;
-
-  master.increase(5)
-
-  setTimeout(function () {
-    master.decrease(5)
-  }, 1000);
 
 });

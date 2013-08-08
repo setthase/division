@@ -1,7 +1,7 @@
 # Require dependencies
 should   = require 'should'
-Master   = require '../lib/master'
-division = require '..'
+Master   = require  __dirname + '/../lib/master'
+division = require  __dirname + '/..'
 
 ############################
 

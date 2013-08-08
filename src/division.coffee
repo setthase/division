@@ -18,7 +18,7 @@ module.exports = class Division extends EventEmitter
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Public constants
-    __define "version",     enumerable: yes, value: require('../package.json').version
+    __define "version",     enumerable: yes, value: require(__dirname + '/../package.json').version
     __define "environment", enumerable: yes, value: process.env.NODE_ENV || 'development'
 
     # Public variables
