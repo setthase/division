@@ -14,7 +14,7 @@
   },
   "scripts": {
     "prepublish": "./node_modules/.bin/cake compile",
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/cake --reporter dot test"
   },
   "bugs": {
     "url": "http://github.com/codename-/division/issues"

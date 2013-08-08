@@ -175,21 +175,17 @@ module.exports = class Master extends EventEmitter
         worker = @worker worker.id
         @emit.call this, "fork", worker
 
-
       cluster.on "online", (worker) =>
         worker = @worker worker.id
         @emit.call this, "online", worker
-
 
       cluster.on "listening", (worker, address) =>
         worker = @worker worker.id
         @emit.call this, "listening", worker, address
 
-
       cluster.on "disconnect", (worker) =>
         worker = @worker worker.id
         @emit.call this, "disconnect", worker
-
 
       cluster.on "exit", (worker, code, signal) =>
         if worker = @worker worker.id

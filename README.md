@@ -1,4 +1,4 @@
-division [![Build Status](https://travis-ci.org/codename-/division.png)](https://travis-ci.org/codename-/division)
+division [![](https://travis-ci.org/codename-/division.png)](https://travis-ci.org/codename-/division)
 ========
 
 Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.

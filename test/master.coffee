@@ -125,57 +125,58 @@ describe 'Class Master', ->
       it 'should return Master class for chaining possibility', ->
         master.increase().should.be.instanceof Master
 
-    # describe 'decrease', ->
+    describe 'decrease', ->
 
-    #   master  = null
+      master  = null
 
-    #   before (next) ->
-    #     cluster = new division({ path: __dirname + '/../example/noop.js' })
-    #     master  = do cluster.run
-    #     master.increase 15
+      before (next) ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
 
-    #     setTimeout next, 1000
+        master.increase 15
 
-    #   after ->
-    #     do master.destroy
+        setTimeout next, 1000
 
-    #   it 'should decrease number of workers (default by one)', (next) ->
-    #     size = master.workers.length
-    #     do master.decrease
+      after ->
+        do master.destroy
 
-    #     setTimeout ->
-    #       master.workers.length.should.be.below size
-    #       master.workers.length.should.equal size - 1
-    #       do next
-    #     , 500
+      it 'should decrease number of workers (default by one)', (next) ->
+        size = master.workers.length
+        do master.decrease
 
-    #   it 'should decrease number of workers by passed amount', (next) ->
-    #     size = master.workers.length
-    #     master.decrease 5
+        setTimeout ->
+          master.workers.length.should.be.below size
+          master.workers.length.should.equal size - 1
+          do next
+        , 5000
 
-    #     setTimeout ->
-    #       master.workers.length.should.be.below size
-    #       master.workers.length.should.equal size - 5
-    #       do next
-    #     , 500
+      it 'should decrease number of workers by passed amount', (next) ->
+        size = master.workers.length
+        master.decrease 5
 
-    #   it 'should emit `decrease` event', (next) ->
-    #     master.once 'decrease', ->
-    #       do next
+        setTimeout ->
+          master.workers.length.should.be.below size
+          master.workers.length.should.equal size - 5
+          do next
+        , 5000
 
-    #     do master.decrease
+      it 'should emit `decrease` event', (next) ->
+        master.once 'decrease', ->
+          do next
 
-    #   it 'should send amount of workers removed in `decrease` event', (next) ->
-    #     master.once 'decrease', (amount) ->
-    #       should.exist amount
-    #       amount.should.equal 1
+        do master.decrease
 
-    #       do next
+      it 'should send amount of workers removed in `decrease` event', (next) ->
+        master.once 'decrease', (amount) ->
+          should.exist amount
+          amount.should.equal 1
 
-    #     do master.decrease
+          do next
 
-    #   it 'should return Master class for chaining possibility', ->
-    #     master.decrease().should.be.instanceof Master
+        do master.decrease
+
+      it 'should return Master class for chaining possibility', ->
+        master.decrease().should.be.instanceof Master
 
     describe 'restart', ->
 
