@@ -25,7 +25,7 @@ describe '~ division watch ~', ->
       setTimeout ->
         master.workers[0].pid.should.not.equal pid
         do next
-      , 3000
+      , 5000
 
   it 'should not restart cluster when main file was changed', (next) ->
     pid = master.workers[0].pid
