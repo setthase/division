@@ -1,7 +1,7 @@
 division [![](https://travis-ci.org/codename-/division.png)](https://travis-ci.org/codename-/division)
 ========
 
-Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.  
+Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.
 This module is inspired by impressive but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [@visionmedia](https://github.com/visionmedia).
 
 ## Installation
@@ -35,6 +35,7 @@ Other features:
  *  graceful shutdown support
  *  bundled extensions
     *  debug: enable verbose debugging informations
+    *  watch: reload cluster when files was changed
     *  signals: add ability to control cluster with POSIX signals
 
 ## Example
