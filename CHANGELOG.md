@@ -2,6 +2,16 @@ CHANGELOG
 =========
 This project is using [Semantic Versioning 2.0.0](http://semver.org/)
 
+0.4.3
+-----
+
+#### Fixes
+ *  Fix test suite for Travis CI
+
+#### Other
+ *  Increase threshold for fast exiting workers
+ *  Changed `npm test` reporter to more readable
+
 0.4.2
 -----
 
