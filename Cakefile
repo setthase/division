@@ -93,8 +93,8 @@ task "test", "Run `mocha` test suite", (options) ->
 
       mocha = spawn "./node_modules/.bin/mocha", parameters
 
-      mocha.stdout.on 'data', (data) -> do process.stdout.write data.toString
-      mocha.stderr.on 'data', (data) -> do process.stderr.write data.toString
+      mocha.stdout.on 'data', (data) -> process.stdout.write data.toString()
+      mocha.stderr.on 'data', (data) -> process.stderr.write data.toString()
 
       mocha.on "exit", (code) ->
         results.push code
