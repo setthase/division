@@ -1,3 +1,5 @@
+fs   = require 'fs'
+path = require 'path'
 {exec, spawn} = require 'child_process'
 
 option "-r", "--reporter [REPORTER]", "reporter type for tests"
@@ -38,15 +40,71 @@ task "compile", "Compile files from '/src' directory into '/lib' directory", ->
 
 task "test", "Run `mocha` test suite", (options) ->
 
-  parameters = ['--recursive']
+  do process.stdin.resume
 
-  if options.reporter
-    parameters = parameters.concat "--reporter", options.reporter
+  files   = []
+  results = []
 
-  mocha = spawn "./node_modules/.bin/mocha", parameters
+  # Helpers
+  forEachSeries = (arr, iterator, callback) ->
+    callback = callback or ->
+    return do callback unless arr.length
 
-  mocha.stdout.on 'data', (data) -> process.stdout.write data.toString()
-  mocha.stderr.on 'data', (data) -> process.stderr.write data.toString()
+    completed = 0
+    iterate = ->
+      iterator arr[completed], (err) ->
+        if err
+          callback err
+          callback = ->
+        else
+          completed += 1
+          if completed >= arr.length
+            callback null
+          else
+            do iterate
+    do iterate
 
-  mocha.on "exit", (code) ->
-    process.exit code
+  resolvePath = (path) ->
+    return if '/' is path[0] then path else __dirname + '/test/' + path
+
+  traverse = (file, next) ->
+    file = resolvePath path.normalize file
+    fs.stat file, (error, stat) ->
+      throw new Error error if error
+      if do stat.isDirectory
+        fs.readdir file, (err, files) ->
+          forEachSeries files.map( (f) -> file + '/' + f ), traverse, next
+      else
+        files.push file
+        do next
+
+  test = (file, next) ->
+    if ".coffee" isnt path.extname file
+
+      results.push 0
+      do next
+
+    else
+
+      parameters = [file]
+
+      if options.reporter
+        parameters = parameters.concat "--reporter", options.reporter
+
+      mocha = spawn "./node_modules/.bin/mocha", parameters
+
+      mocha.stdout.on 'data', (data) -> do process.stdout.write data.toString
+      mocha.stderr.on 'data', (data) -> do process.stderr.write data.toString
+
+      mocha.on "exit", (code) ->
+        results.push code
+        do next
+
+  #############################
+
+  # Read test
+  fs.readdir "test", (e, f) ->
+    forEachSeries f, traverse, ->
+      forEachSeries files, test, ->
+        process.exit if results.some((result) -> result isnt 0) then 1 else 0
+
