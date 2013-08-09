@@ -250,12 +250,12 @@ module.exports = class Master extends EventEmitter
   __define "killed", value: (worker) ->
     # if we have many failing workers at boot
     # then we likely have a serious issue
-    if Date.now() - @startup < 20000
-      if ++@__killed > 20
+    if Date.now() - @startup < 60000
+      if ++@__killed > 60
 
         message = """
 
-                    Detected over 20 worker deaths in the first 20 seconds of life,
+                    Detected over 60 worker deaths in the first 60 seconds of life,
                     there is most likely a serious issue with your server.
 
                     Aborting!

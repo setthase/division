@@ -79,13 +79,14 @@ task "test", "Run `mocha` test suite", (options) ->
         do next
 
   test = (file, next) ->
+    process.stdout.write "\n\x1b[90m  File: \x1b[0m #{path.relative __dirname, file}\n"
+
     if ".coffee" isnt path.extname file
 
       results.push 0
       do next
 
     else
-
       parameters = [file]
 
       if options.reporter
