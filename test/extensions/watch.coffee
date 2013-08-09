@@ -9,9 +9,11 @@ describe '~ division watch ~', ->
 
   master = null
 
-  before ->
+  before (next) ->
     division.use 'watch', [__dirname + '/../../example', __dirname + '/../../node_modules/mocha/bin/_mocha'], { extensions: ['.js', ''] }
     master = do division.run
+
+    setTimeout next, 1000
 
   after ->
     do master.destroy
