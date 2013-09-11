@@ -1,4 +1,4 @@
-division [![](https://travis-ci.org/codename-/division.png)](https://travis-ci.org/codename-/division)
+division [![](https://travis-ci.org/codename-/division.png)](https://travis-ci.org/codename-/division) [![](https://badge.fury.io/js/division.png)](https://npmjs.org/package/division)
 ========
 
 Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.<br>
