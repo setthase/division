@@ -139,7 +139,7 @@ module.exports = class Master extends EventEmitter
       index = @settings.size
 
       while n--
-        @workers[index].close @timeout, yes
+        @workers[index].close @settings.timeout, yes
         index++
 
     return this

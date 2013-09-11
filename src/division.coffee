@@ -22,16 +22,17 @@ module.exports = class Division extends EventEmitter
     __define "environment", enumerable: yes, value: process.env.NODE_ENV || 'development'
 
     # Public variables
-    __define "settings", enumerable: yes, writable: yes, value: { extensions : [], size : Math.max 2, require('os').cpus().length }
+    __define "settings", enumerable: yes, set: (->), get: -> @__settings
 
     # Private constants
     __define "master",  value: new Master()
 
     # Private variables
-    __define "running", writable: yes, value: off
+    __define "running",    writable: yes, value: off
+    __define "__settings", writable: yes, value: { extensions : [], size : Math.max 2, require('os').cpus().length }
 
     # Apply user defined settings
-    @extend @settings, settings
+    @extend @__settings, settings
 
   ############################
   #
@@ -53,12 +54,12 @@ module.exports = class Division extends EventEmitter
 
   # Assign `setting` in settings to `value`
   __define "set", enumerable: yes, value: (setting, value)->
-    @settings[setting] = value
+    @__settings[setting] = value
     return this
 
   # Return value of `setting`
   __define "get", enumerable: yes, value: (setting)->
-    return @settings[setting]
+    return @__settings[setting]
 
   # Enable `setting`
   __define "enable", enumerable: yes, value: (setting)->
@@ -66,7 +67,7 @@ module.exports = class Division extends EventEmitter
 
   # Check if `setting` is enabled (truthy)
   __define "enabled", enumerable: yes, value: (setting)->
-    return !!@settings[setting]
+    return !!@__settings[setting]
 
   # Disable `setting`
   __define "disable", enumerable: yes, value: (setting)->
@@ -74,14 +75,14 @@ module.exports = class Division extends EventEmitter
 
   # Check if `setting` is disabled (truthy)
   __define "disabled", enumerable: yes, value: (setting)->
-    return !@settings[setting]
+    return !@__settings[setting]
 
   # Use the given `extension`
   __define "use", enumerable: yes, value: (extension, parameters...) ->
     return this if not extension
 
     if typeof extension is "string"
-      @settings.extensions.push extension
+      @__settings.extensions.push extension
 
       try
         extension = require @resolve extension
@@ -98,7 +99,7 @@ module.exports = class Division extends EventEmitter
     if cluster.isWorker
       message = "You cannot run cluster in worker process!\n"
 
-      if ~ @settings.extensions.indexOf 'debug'
+      if ~ @__settings.extensions.indexOf 'debug'
         @emit.call this, "error", "\n#{message}"
 
       else
@@ -107,12 +108,12 @@ module.exports = class Division extends EventEmitter
       return process.exit 3
 
     if not @running
-      @master.configure @settings
+      @master.configure @__settings
 
       # Start master process
       process.nextTick =>
         counter = 0
-        do @master.spawn while counter++ < @settings.size
+        do @master.spawn while counter++ < @__settings.size
 
         fn.call @master, @master if typeof fn is 'function'
 

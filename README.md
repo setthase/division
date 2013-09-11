@@ -1,7 +1,7 @@
 division [![](https://travis-ci.org/codename-/division.png)](https://travis-ci.org/codename-/division)
 ========
 
-Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.
+Simple and powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.<br>
 This module is inspired by impressive but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [@visionmedia](https://github.com/visionmedia).
 
 ## Installation
@@ -28,15 +28,15 @@ $ npm test
 The most valuable feature: you don't need to change your code to working within cluster.
 
 Other features:
- *  standalone (without 3rd-party dependencies)
- *  zero-downtime restart
- *  maintains worker count
- *  forceful shutdown support
- *  graceful shutdown support
- *  bundled extensions
-    *  debug: enable verbose debugging informations
-    *  watch: reload cluster when files was changed
-    *  signals: add ability to control cluster with POSIX signals
+ * standalone (without 3rd-party dependencies)
+ * zero-downtime restart
+ * maintains worker count
+ * forceful shutdown support
+ * graceful shutdown support
+ * bundled extensions
+   * debug: enable verbose debugging informations
+   * watch: reload cluster when files was changed
+   * signals: add ability to control cluster with POSIX signals
 
 ## Example
 
@@ -89,10 +89,10 @@ $ NODE_ENV=production node cluster.js
 
 ```javascript
 var division = require('division');
-var cluster = new division();
+// You can pass settings in constructor
+var cluster = new division({ path : 'app.js' });
 
-// You can chain methods
-cluster.set('path', 'app.js').run();
+cluster.run();
 ```
 
 ## API Reference
@@ -101,31 +101,91 @@ cluster.set('path', 'app.js').run();
 
 #### Attributes
 
+`Division` provide these public attributes
+
 ###### version
+*Constant String*<br>
+Contain current version number of **division** module.
 
 ###### environment
+*Constant String*, default: `'development'`<br>
+Contain name of current runtime environment (`NODE_ENV`).
+
+**NOTE:** This could be set only when starting application. This cannot be changed when application is running.
 
 ###### settings
+*Read-Only Object*, default: `{ extensions: [], size: Math.max(2, require('os').cpus().length) }`<br>
+Contain current **division** configuration. List of currently available configuration keys:
+
+  * **path** ( *String* ) — path to workers file
+  * **args** ( *Array* ) — string arguments passed to workers
+  * **size** ( *Number* ) — amount of workers processes to be run
+  * **silent** ( *Boolean* ) — whether or not to send output to parent stdio
+  * **timeout** ( *Number* ) — time in ms to kill worker process, which don't want to close itself after `close`
+
+**NOTE:** Settings are read-only when directly called. They can be changed only by class methods or by constructor call.
+
+**NOTE:** `path`, `args` and `silent` can be modified until `run` method is not called. After that, changes will not take effects.
 
 #### Methods
 
+`Division` provide these public methods.
+
 ###### configure
+Conditionally perform the following `action` if **NODE_ENV** matches `environment` or if there is no `environment` set.
+
+**parameters:** `environment` *optional String*, `action` *required Function*<br>
+**return:** *division instance* (for chaining)
 
 ###### set
+Set `setting` to `value`.
+
+**parameters:** `setting` *required String*, `value` *required Mixed*<br>
+**return:** *division instance* (for chaining)
 
 ###### get
+Get `value` from `setting`.
+
+**parameters:** `setting` *required String*<br>
+**return:** value of `setting` field
 
 ###### use
+Use the given `extension`. If `extension` is string method try to `require` extension library, if function then method invoke this function in **Master** instance scope.
+
+**parameters:** `extension` *required String or Function*, `parameters...` *optional Mixed values*<br>
+**return:** *division instance* (for chaining)
 
 ###### enable
+Set `setting` to *true*.
+
+**parameters:** `setting` *required String*<br>
+**return:** *division instance* (for chaining)
 
 ###### disable
+Set `setting` to *false*.
+
+**parameters:** `setting` *required String*<br>
+**return:** *division instance* (for chaining)
 
 ###### enabled
+Check if `setting` is *truthy*.
+
+**parameters:** `setting` *required String*<br>
+**return:** *Boolean value*
 
 ###### disabled
+Check if `setting` is *falsy*.
+
+**parameters:** `setting` *required String*<br>
+**return:** *Boolean value*
 
 ###### run
+Run configured cluster process. `action` function is invoked in **Master** instance scope.
+
+**NOTE:** This could be called only once in whole application life.
+
+**parameters:** `action` *optional Function*<br>
+**return:** *Master instance*
 
 ### Master class
 

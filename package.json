@@ -10,7 +10,7 @@
     "should": "~0.6.3"
   },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 0.8.0"
   },
   "scripts": {
     "prepublish": "./node_modules/.bin/cake compile",
