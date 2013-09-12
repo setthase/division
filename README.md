@@ -147,7 +147,7 @@ Get `value` from `setting`.
 **return:** value of `setting` field
 
 ###### use
-Use the given `extension`. If `extension` is string method try to `require` extension library, if function then method invoke this function in **Master** instance scope.
+Use the given `extension`. If `extension` is string - this method try to `require` extension library; if function then this method invoke that function in **Master** instance scope.
 
 **parameters:** `extension` *required String or Function*, `parameters...` *optional Mixed values*<br>
 **return:** *division instance* (for chaining)
