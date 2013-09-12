@@ -2,6 +2,15 @@ CHANGELOG
 =========
 This project is using [Semantic Versioning 2.0.0](http://semver.org/)
 
+0.4.4
+-----
+
+#### Fixes
+ *  Fix error 'IPC channel is already disconnected' in test suite
+
+#### Other
+ *  Update part of documentation
+
 0.4.3
 -----
 

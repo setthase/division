@@ -28,6 +28,7 @@ $ npm test
 The most valuable feature: you don't need to change your code to working within cluster.
 
 Other features:
+ * works with node version >= 0.8
  * standalone (without 3rd-party dependencies)
  * zero-downtime restart
  * maintains worker count

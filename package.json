@@ -1,6 +1,6 @@
 {
   "name": "division",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Simple and powerful wrapper over node.js cluster API. This module is inspired by impressive but abandoned project Cluster created by visionmedia (TJ Holowaychuk)",
   "author": "codename-",
   "main": "lib/division.js",
