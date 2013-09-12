@@ -102,8 +102,6 @@ cluster.run();
 
 #### Attributes
 
-`Division` provide these public attributes
-
 ###### version
 *Constant String*<br>
 Contain current version number of **division** module.
@@ -129,8 +127,6 @@ Contain current **division** configuration. List of currently available configur
 **NOTE:** `path`, `args` and `silent` can be modified until `run` method is not called. After that, changes will not take effects.
 
 #### Methods
-
-`Division` provide these public methods.
 
 ###### configure
 Conditionally perform the following `action` if **NODE_ENV** matches `environment` or if there is no `environment` set.
@@ -194,15 +190,11 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 #### Attributes
 
-` Master ` provide these public attributes
-
 ###### pid
 
 ###### startup
 
 #### Methods
-
-` Master ` provide these public methods
 
 ###### addSignalListener
 
@@ -225,8 +217,6 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 ###### broadcast
 
 #### Events
-
-` Master ` inherit his prototype from `EventEmitter` and emit these events
 
 ###### error
 
@@ -252,11 +242,7 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 ### Worker class
 
-` Worker ` is returned in some of ` Master ` events
-
 #### Attributes
-
-` Worker ` provide these public attributes
 
 ###### id
 
@@ -268,8 +254,6 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 #### Methods
 
-` Worker ` provide these public methods
-
 ###### close
 
 ###### kill
@@ -277,8 +261,6 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 ###### publish
 
 #### Events
-
-` Worker ` inherit his prototype from `EventEmitter` and emit these events
 
 ###### close
 
