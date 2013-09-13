@@ -98,9 +98,15 @@ cluster.run();
 
 ## API Reference
 
+[division](#division-class) | [Master](#master-class) | [Worker](#worker-class)
+
 ### Division class
 
+[Attributes](#attributes) | [Methods](#methods)
+
 #### Attributes
+
+[version](#version) | [environment](#environment) | [settings](#settings)
 
 ###### version
 *Constant String*<br>
@@ -127,6 +133,8 @@ Contain current **division** configuration. List of currently available configur
 **NOTE:** `path`, `args` and `silent` can be modified until `run` method is not called. After that, changes will not take effects.
 
 #### Methods
+
+[configure](#configure) | [set](#set) | [get](#get) | [use](#use) | [enable](#enable) | [disable](#disable) | [enabled](#enabled) | [disabled](#disabled) | [run](#run)
 
 ###### configure
 Conditionally perform the following `action` if **NODE_ENV** matches `environment` or if there is no `environment` set.
@@ -188,13 +196,19 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 ` Master ` is returned when you call ` run ` method from ` Division ` and it is also set as a scope for callback function of this method.
 
+[Attributes](#attributes-1) | [Methods](#methods-1) | [Events](#events)
+
 #### Attributes
+
+[pid](#pid) | [startup](#startup)
 
 ###### pid
 
 ###### startup
 
 #### Methods
+
+[addSignalListener](#addsignallistener) | [increase](#increase) | [decrease](#decrease) | [restart](#restart) | [close](#close) | [destroy](#destroy) | [kill](#kill) | [maintenance](#maintenance) | [publish](#publish) | [broadcast](#broadcast)
 
 ###### addSignalListener
 
@@ -217,6 +231,8 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 ###### broadcast
 
 #### Events
+
+[error](#error) | [increase](#increase-1) | [decrease](#decrease-1) | [restart](#restart-1) | [close](#close-1) | [destroy](#destroy-1) | [fork](#fork) | [online](#online) | [listening](#listening) | [disconnect](#disconnect) | [exit](#exit)
 
 ###### error
 
@@ -242,7 +258,11 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 ### Worker class
 
+[Attributes](#attributes-2) | [Methods](#methods-2) | [Events](#events-1)
+
 #### Attributes
+
+[id](#id) | [pid](#pid-1) | [startup](#startup-1) | [status](#status)
 
 ###### id
 
@@ -254,6 +274,8 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 #### Methods
 
+[close](#close-2) | [kill](#kill-1) | [publish](#publish-1)
+
 ###### close
 
 ###### kill
@@ -261,6 +283,8 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 ###### publish
 
 #### Events
+
+[close](#close-3) | [kill](#kill-2) | [publish](#publish-2)
 
 ###### close
 
