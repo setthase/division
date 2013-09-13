@@ -28,16 +28,17 @@ $ npm test
 The most valuable feature: you don't need to change your code to working within cluster.
 
 Other features:
- * works with node version >= 0.8
- * standalone (without 3rd-party dependencies)
- * zero-downtime restart
- * maintains worker count
- * forceful shutdown support
- * graceful shutdown support
- * bundled extensions
-   * debug: enable verbose debugging informations
-   * watch: reload cluster when files was changed
-   * signals: add ability to control cluster with POSIX signals
+
+  * works with node version >= 0.8
+  * standalone (without 3rd-party dependencies)
+  * zero-downtime restart
+  * maintains worker count
+  * forceful shutdown support
+  * graceful shutdown support
+  * bundled extensions
+    * debug: enable verbose debugging informations
+    * watch: reload cluster when files was changed
+    * signals: add ability to control cluster with POSIX signals
 
 ## Example
 
