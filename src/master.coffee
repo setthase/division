@@ -43,8 +43,8 @@ module.exports = class Master extends EventEmitter
   __define = (args...) => Object.defineProperty.apply null, [].concat Master.prototype, args
 
   # Register signal
-  __define "addSignalListener", enumerable: yes, value: (signal, callback) ->
-    process.on signal, callback.bind this
+  __define "addSignalListener", enumerable: yes, value: (event_or_signal, callback) ->
+    process.on event_or_signal, callback.bind this
     return this
 
   ## Runtime

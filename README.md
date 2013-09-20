@@ -99,15 +99,15 @@ cluster.run();
 
 ## API Reference
 
-[division](#division-class) | [Master](#master-class) | [Worker](#worker-class)
+[ [division](#division-class) | [Master](#master-class) | [Worker](#worker-class) ]
 
 ### Division class
 
-[Attributes](#attributes) | [Methods](#methods)
+[ [Attributes](#attributes) | [Methods](#methods) ]
 
 #### Attributes
 
-[version](#version) | [environment](#environment) | [settings](#settings)
+[ [version](#version) | [environment](#environment) | [settings](#settings) ]
 
 ###### version
 *Constant String*<br>
@@ -135,7 +135,7 @@ Contain current **division** configuration. List of currently available configur
 
 #### Methods
 
-[configure](#configure) | [set](#set) | [get](#get) | [use](#use) | [enable](#enable) | [disable](#disable) | [enabled](#enabled) | [disabled](#disabled) | [run](#run)
+[ [configure](#configure) | [set](#set) | [get](#get) | [use](#use) | [enable](#enable) | [disable](#disable) | [enabled](#enabled) | [disabled](#disabled) | [run](#run) ]
 
 ###### configure
 Conditionally perform the following `action` if **NODE_ENV** matches `environment` or if there is no `environment` set.
@@ -158,7 +158,7 @@ Get `value` from `setting`.
 ###### use
 Use the given `extension`. If `extension` is string - this method try to `require` extension library; if function then this method invoke that function in **Master** instance scope.
 
-**parameters:** `extension` *required String or Function*, `parameters...` *optional Mixed values*<br>
+**parameters:** `extension` *required String or Function*, `parameters...` *optional list of mixed values*<br>
 **return:** *division instance* (for chaining)
 
 ###### enable
@@ -197,43 +197,83 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 ` Master ` is returned when you call ` run ` method from ` Division ` and it is also set as a scope for callback function of this method.
 
-[Attributes](#attributes-1) | [Methods](#methods-1) | [Events](#events)
+[ [Attributes](#attributes-1) | [Methods](#methods-1) | [Events](#events) ]
 
 #### Attributes
 
-[pid](#pid) | [startup](#startup)
+[ [pid](#pid) | [startup](#startup) ]
 
 ###### pid
+*Constant String*<br>
+Contain current master process ID (PID number)
 
 ###### startup
+*Constant Number*<br>
+Contain timestamp number indicating start of cluster process.
 
 #### Methods
 
-[addSignalListener](#addsignallistener) | [increase](#increase) | [decrease](#decrease) | [restart](#restart) | [close](#close) | [destroy](#destroy) | [kill](#kill) | [maintenance](#maintenance) | [publish](#publish) | [broadcast](#broadcast)
+[ [addSignalListener](#addsignallistener) | [increase](#increase) | [decrease](#decrease) | [restart](#restart) | [close](#close) | [destroy](#destroy) | [kill](#kill) | [maintenance](#maintenance) | [publish](#publish) | [broadcast](#broadcast) ]
 
 ###### addSignalListener
+Listen for **process** `event` or POSIX `signal` and firing `callback` in **Master** scope.
+
+**parameters:** `event_or_signal` *required String*, `callback` *required Function*<br>
+**return:** *Master instance* (for chaining)
 
 ###### increase
+Increase number of active workers by `amount`; by default `amount` is equal `1`.
+
+**parameters:** `amount` *optional Number*<br>
+**return:** *Master instance* (for chaining)
 
 ###### decrease
+Decrease number of active workers by `amount`; by default `amount` is equal `1`.
+
+**parameters:** `amount` *optional Number*<br>
+**return:** *Master instance* (for chaining)
 
 ###### restart
+Gracefully restarts all workers.
+
+**return:** *Master instance* (for chaining)
 
 ###### close
+Gracefully close all workers.
+
+**return:** *Master instance* (for chaining)
 
 ###### destroy
+Forcefully destroy all workers.
+
+**return:** *Master instance* (for chaining)
 
 ###### kill
+Send POSIX `signal` to all workers; by default `signal` is equal `SIGTERM`.
+
+**parameters:** `signal` *optional String*<br>
+**return:** *Master instance* (for chaining)
 
 ###### maintenance
+Maintain active workers amount, re-spawning or closing if necessary.
+
+**return:** *Master instance* (for chaining)
 
 ###### publish
+Send `event` message to **Worker** process with specified `id`.
+
+**parameters:** `id` *required Number*, `event` *required String*, `parameters...` *optional list of mixed values*<br>
+**return:** *Master instance* (for chaining)
 
 ###### broadcast
+Send `event` message to all **Worker** processes.
+
+**parameters:** `event` *required String*, `parameters...` *optional list of mixed values*<br>
+**return:** *Master instance* (for chaining)
 
 #### Events
 
-[error](#error) | [increase](#increase-1) | [decrease](#decrease-1) | [restart](#restart-1) | [close](#close-1) | [destroy](#destroy-1) | [fork](#fork) | [online](#online) | [listening](#listening) | [disconnect](#disconnect) | [exit](#exit)
+[ [error](#error) | [increase](#increase-1) | [decrease](#decrease-1) | [restart](#restart-1) | [close](#close-1) | [destroy](#destroy-1) | [fork](#fork) | [online](#online) | [listening](#listening) | [disconnect](#disconnect) | [exit](#exit) ]
 
 ###### error
 
@@ -259,23 +299,37 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 ### Worker class
 
-[Attributes](#attributes-2) | [Methods](#methods-2) | [Events](#events-1)
+[ [Attributes](#attributes-2) | [Methods](#methods-2) | [Events](#events-1) ]
 
 #### Attributes
 
-[id](#id) | [pid](#pid-1) | [startup](#startup-1) | [status](#status)
+[ [id](#id) | [pid](#pid-1) | [startup](#startup-1) | [status](#status) ]
 
 ###### id
+*Constant Number*<br>
+Contain current cluster worker ID number.
 
 ###### pid
+*Constant String*<br>
+Contain current worker process ID (PID) number.
 
 ###### startup
+*Constant Number*<br>
+Contain timestamp number indicating start of **Worker** process.
 
 ###### status
+*Read-Only String*<br>
+Contain current **Worker** status. Available statuses:
+
+  * **none** - when worker process is creating
+  * **online** - when worker process is successfully forked
+  * **listening** - when worker process is listening for connections
+  * **disconnected** - when worker process is disconnected (properly closed)
+  * **dead** - when worker process died (killed by error or signal)
 
 #### Methods
 
-[close](#close-2) | [kill](#kill-1) | [publish](#publish-1)
+[ [close](#close-2) | [kill](#kill-1) | [publish](#publish-1) ]
 
 ###### close
 
@@ -285,7 +339,7 @@ Run configured cluster process. `action` function is invoked in **Master** insta
 
 #### Events
 
-[close](#close-3) | [kill](#kill-2) | [publish](#publish-2)
+[ [close](#close-3) | [kill](#kill-2) | [publish](#publish-2) ]
 
 ###### close
 
