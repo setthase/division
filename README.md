@@ -273,29 +273,58 @@ Send `event` message to all **Worker** processes.
 
 #### Events
 
+**Master** inherit from `Event Emitter` and all events (listed below) are called with the **Master** scope.
+
 [ [error](#error) | [increase](#increase-1) | [decrease](#decrease-1) | [restart](#restart-1) | [close](#close-1) | [destroy](#destroy-1) | [fork](#fork) | [online](#online) | [listening](#listening) | [disconnect](#disconnect) | [exit](#exit) ]
 
 ###### error
+Event emitted when some error occurred.
+
+**Callback parameters:** `error` *String* containing error stack trace.
 
 ###### increase
+Event emitted when number of workers is going to be increased.
+
+**Callback parameters:** `amount` *Number* of workers that need to be added to current group.
 
 ###### decrease
+Event emitted when number of workers is going to be decreased.
+
+**Callback parameters:** `amount` *Number* of workers that need to be removed from current group.
 
 ###### restart
+Event emitted when worker processes are going to be restarted.
 
 ###### close
+Event emitted when cluster process is going to be gracefully closed.
 
 ###### destroy
+Event emitted when cluster process is going to be forcefully destroyed.
 
 ###### fork
+Event emitted when new cluster worker process was forked.
+
+**Callback parameters:** `worker` *Worker* instance for newly created worker.
 
 ###### online
+Event emitted when new cluster worker process is ready to do his job.
+
+**Callback parameters:** `worker` *Worker* instance for newly created worker.
 
 ###### listening
+Event emitted when worker start listening for incoming connections.
+
+**Callback parameters:** `worker` *Worker* instance for this worker, `address` *Object* describing address on which worker is listening.
 
 ###### disconnect
+Event emitted when worker process stop listen for incoming connections.
+
+**Callback parameters:** `worker` *Worker* instance for disconnected worker.
 
 ###### exit
+Event emitted when worker process has quit.
+
+**Callback parameters:** `worker` *Worker* instance for closed worker, `code` *Number* with exit status code, `signal` *String* with POSIX signal (eg. `SIGKILL`) which caused that process exited.
 
 ### Worker class
 
@@ -338,6 +367,8 @@ Contain current **Worker** status. Available statuses:
 ###### publish
 
 #### Events
+
+**Worker** inherit from `Event Emitter` and all events (listed below) are called with the **Worker** scope.
 
 [ [close](#close-3) | [kill](#kill-2) | [publish](#publish-2) ]
 
