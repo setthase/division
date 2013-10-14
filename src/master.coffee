@@ -18,7 +18,6 @@ module.exports = class Master extends EventEmitter
   constructor: ->
 
     # Helper providing definer of values (added to instance)
-    `var __define`
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Public constants
@@ -216,7 +215,7 @@ module.exports = class Master extends EventEmitter
 
       @on "error", (error) =>
         unless ~ @settings.extensions.indexOf 'debug'
-          process.stderr.write message
+          process.stderr.write "\n#{error}"
 
     @registered = yes
 

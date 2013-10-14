@@ -14,7 +14,6 @@ module.exports = class Division extends EventEmitter
   constructor: (settings) ->
 
     # Helper providing definer of values (added to instance)
-    `var __define`
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Public constants

@@ -17,7 +17,6 @@ module.exports = class Worker extends EventEmitter
   constructor: ->
 
     # Helper providing definer of values (added to instance)
-    `var __define`
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Private constants
@@ -57,7 +56,7 @@ module.exports = class Worker extends EventEmitter
     setTimeout =>
       unless @status is "dead"
         # Use POSIX command `kill(1)` to definitely kill process
-        exec "kill -s kill #{@.pid}", ->
+        exec "kill -s kill #{@pid}", ->
 
     , timeout
 
@@ -66,7 +65,7 @@ module.exports = class Worker extends EventEmitter
   # Send `signal` to worker - if `signal` is not specified then send `SIGTERM`
   __define "kill", enumerable: yes, value: (signal = "SIGTERM") ->
     # Emit 'kill' event
-    @emit.call this, "kill"
+    @emit.call this, "kill", signal
 
     # Send signal to worker in next tick
     process.nextTick =>
@@ -76,11 +75,11 @@ module.exports = class Worker extends EventEmitter
 
   # Send message to worker instance
   __define "publish", enumerable: yes, value: (event, parameters...) ->
-    # Emit 'publish' event
-    @emit.call this, "publish"
-
     # Parse parameters array
     if parameters.length is 1 then parameters = parameters[0]
+
+    # Emit 'publish' event
+    @emit.call this, "publish", event, parameters
 
     # Send message to worker
     try @instance.send { event, parameters }
