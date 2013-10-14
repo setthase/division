@@ -2,6 +2,16 @@ CHANGELOG
 =========
 This project is using [Semantic Versioning 2.0.0](http://semver.org/)
 
+0.4.5
+-----
+
+#### Fixes
+ *  Fix error with writing error messages when `debug` extension was not enabled
+
+#### Other
+ *  Some code cleanup
+ *  Finished version of documentation
+
 0.4.4
 -----
 
