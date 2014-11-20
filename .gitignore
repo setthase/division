@@ -1,5 +1,10 @@
 # Ignore this directories
 node_modules
+lib
+
+# Ignore system files
+.DS_Store
+.*.swp
 
 # Ignore npm log file
 npm-debug.log
