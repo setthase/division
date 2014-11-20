@@ -14,7 +14,7 @@ describe 'Class Master', ->
 
   describe 'Check architecture consistency', ->
 
-    master  = null
+    master = null
 
     before ->
       cluster = new division({ path: __dirname + '/../example/noop.js' })
@@ -31,43 +31,43 @@ describe 'Class Master', ->
 
     it 'should contain addSignalListener method', ->
       should.exist master.addSignalListener
-      master.addSignalListener.should.be.a 'function'
+      master.addSignalListener.should.be.a.Function
 
     it 'should contain increase method', ->
       should.exist master.increase
-      master.increase.should.be.a 'function'
+      master.increase.should.be.a.Function
 
     it 'should contain decrease method', ->
       should.exist master.decrease
-      master.decrease.should.be.a 'function'
+      master.decrease.should.be.a.Function
 
     it 'should contain restart method', ->
       should.exist master.restart
-      master.restart.should.be.a 'function'
+      master.restart.should.be.a.Function
 
     it 'should contain close method', ->
       should.exist master.close
-      master.close.should.be.a 'function'
+      master.close.should.be.a.Function
 
     it 'should contain destroy method', ->
       should.exist master.destroy
-      master.destroy.should.be.a 'function'
+      master.destroy.should.be.a.Function
 
     it 'should contain kill method', ->
       should.exist master.kill
-      master.kill.should.be.a 'function'
+      master.kill.should.be.a.Function
 
     it 'should contain maintenance method', ->
       should.exist master.maintenance
-      master.maintenance.should.be.a 'function'
+      master.maintenance.should.be.a.Function
 
     it 'should contain publish method', ->
       should.exist master.publish
-      master.publish.should.be.a 'function'
+      master.publish.should.be.a.Function
 
     it 'should contain broadcast method', ->
       should.exist master.broadcast
-      master.broadcast.should.be.a 'function'
+      master.broadcast.should.be.a.Function
 
   ############################
   #

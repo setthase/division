@@ -28,44 +28,44 @@ describe 'Class Division', ->
       should.exist division.settings
 
     it 'should have default values in settings attribute', ->
-      division.settings.should.be.a 'object'
-      division.settings.should.include { extensions : [], size : Math.max 2, require('os').cpus().length }
+      division.settings.should.be.an.Object
+      division.settings.should.containEql { extensions : [], size : Math.max 2, require('os').cpus().length }
 
     it 'should contain configure method', ->
       should.exist division.configure
-      division.configure.should.be.a 'function'
+      division.configure.should.be.a.Function
 
     it 'should contain set method', ->
       should.exist division.set
-      division.set.should.be.a 'function'
+      division.set.should.be.a.Function
 
     it 'should contain get method', ->
       should.exist division.get
-      division.get.should.be.a 'function'
+      division.get.should.be.a.Function
 
     it 'should contain enable method', ->
       should.exist division.enable
-      division.enable.should.be.a 'function'
+      division.enable.should.be.a.Function
 
     it 'should contain enabled method', ->
       should.exist division.enabled
-      division.enabled.should.be.a 'function'
+      division.enabled.should.be.a.Function
 
     it 'should contain disable method', ->
       should.exist division.disable
-      division.disable.should.be.a 'function'
+      division.disable.should.be.a.Function
 
     it 'should contain disabled method', ->
       should.exist division.disabled
-      division.disabled.should.be.a 'function'
+      division.disabled.should.be.a.Function
 
     it 'should contain use method', ->
       should.exist division.use
-      division.use.should.be.a 'function'
+      division.use.should.be.a.Function
 
     it 'should contain run method', ->
       should.exist division.run
-      division.run.should.be.a 'function'
+      division.run.should.be.a.Function
 
   ############################
   #
@@ -96,7 +96,7 @@ describe 'Class Division', ->
 
       it 'should set `value` into `setting` key', ->
         division.set 'test_key', 'test_value'
-        division.settings.should.include { test_key : 'test_value' }
+        division.settings.should.containEql { test_key : 'test_value' }
 
       it 'should return Division class for chaining possibility', ->
         division.set().should.be.an.instanceof Division
@@ -144,7 +144,7 @@ describe 'Class Division', ->
 
       it 'should add extension to list on enabled extensions when `extension` is string', ->
         division.use 'signals'
-        division.settings.extensions.should.include 'signals'
+        division.settings.extensions.should.containEql 'signals'
 
       it 'should not break when cannot require an extension', ->
         division.use 'unknown'
