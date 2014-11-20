@@ -1,5 +1,6 @@
 # Ignore this directories
 node_modules
+coverage
 lib
 
 # Ignore system files

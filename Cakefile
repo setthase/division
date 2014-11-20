@@ -30,7 +30,23 @@ task "compile", "Compile files from '/src' directory into '/lib' directory", ->
       process.stderr.write "\n\x1b[31m  Compilation failed\n  Error:\x1b[0m #{stderr}\n"
       process.exit 1
 
-    exec "./node_modules/.bin/coffee -b -c -o lib/ src/", (error, stdout, stderr) ->
+    exec "./node_modules/.bin/coffee --no-header --bare --compile --output lib/ src/", (error, stdout, stderr) ->
+      if error
+        process.stderr.write "\n\x1b[31m  Compilation failed\n  Error:\x1b[0m #{stderr}\n"
+        process.exit 1
+
+      compiled = yes
+      process.stdout.write "\n\x1b[32m  Compilation successful\x1b[90m (#{Date.now() - __start} ms)\x1b[0m\n\n"
+
+task "coverage", "Compile files with coverage instructions", ->
+  __start = Date.now()
+
+  exec "rm -rf ./lib && mkdir lib", (error, stdout, stderr) ->
+    if error
+      process.stderr.write "\n\x1b[31m  Compilation failed\n  Error:\x1b[0m #{stderr}\n"
+      process.exit 1
+
+    exec "./node_modules/.bin/coffeeCoverage src lib", (error, stdout, stderr) ->
       if error
         process.stderr.write "\n\x1b[31m  Compilation failed\n  Error:\x1b[0m #{stderr}\n"
         process.exit 1

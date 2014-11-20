@@ -1,6 +1,18 @@
  language: node_js
+
  node_js:
    - "0.11"
    - "0.10"
    - "0.9"
    - "0.8"
+
+ branches:
+   except:
+     - gh-pages
+
+ script:
+   - npm run coverage
+
+ after_script:
+   - if [[ `node --version` == *v0.10*  ]]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls --verbose; fi
+
