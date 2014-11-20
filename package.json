@@ -8,6 +8,7 @@
     "coffee-coverage": "^0.4.2",
     "coffee-script": "^1.8.0",
     "coveralls": "^2.11.2",
+    "istanbul": "^0.3.2",
     "mocha": "^2.0.1",
     "should": "^4.3.0"
   },
@@ -16,10 +17,8 @@
   },
   "scripts": {
     "prepublish": "./node_modules/.bin/cake compile",
-
     "precoverage": "./node_modules/.bin/cake coverage",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R dot",
-
     "pretest": "./node_modules/.bin/cake compile",
     "test": "./node_modules/.bin/cake --reporter spec test"
   },
