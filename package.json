@@ -13,7 +13,7 @@
     "should": "^4.3.0"
   },
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 0.10.0"
   },
   "scripts": {
     "prepublish": "./node_modules/.bin/cake compile",
