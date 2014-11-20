@@ -31,7 +31,8 @@ module.exports = class Master extends EventEmitter
     __define "state",    writable: yes, value: ''
     __define "pending",  writable: yes, value: 0
 
-    __define "__killed", writable: yes, value: 0
+    __define "__killed",   writable: yes, value: 0
+    __define "__incident", writable: yes, value: 0
 
   ############################
   #
@@ -247,15 +248,20 @@ module.exports = class Master extends EventEmitter
     return this
 
   __define "killed", value: (worker) ->
-    # if we have many failing workers at boot
-    # then we likely have a serious issue
-    if Date.now() - @startup < 60000
-      if ++@__killed > 60
+    # Record new time since last incident if previous incident is older than 300 seconds.
+    if Date.now() - @__incident > 300000
+      @__killed   = 0
+      @__incident = do Date.now
+
+    # If we have many failing workers in a short time period,
+    # then we likely have a serious issue.
+    if Date.now() - @__incident < 300000
+      if ++@__killed > 30
 
         message = """
 
-                    Detected over 60 worker deaths in the first 60 seconds of life,
-                    there is most likely a serious issue with your server.
+                    Detected over 30 worker deaths since last 5 minutes,
+                    there is most likely a serious issue with your application.
 
                     Aborting!
 
