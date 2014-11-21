@@ -12,7 +12,7 @@ path = require 'path'
 module.exports = (files, options = {}) ->
 
   # Default settings
-  __dirname__ = path.dirname process.argv[1]
+  __dirname__ = do process.cwd
 
   if not files then files = __dirname__
   if not Array.isArray files then files = [files]

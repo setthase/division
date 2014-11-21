@@ -8,9 +8,10 @@ division = new (require __dirname + '/../..')({ path: __dirname + '/../../exampl
 describe '~ division watch ~', ->
 
   master = null
+  __dirname__ = do process.cwd
 
   before (next) ->
-    division.use 'watch', [__dirname + '/../../example/noop.js', process.argv[1]], { extensions: ['.js', ''] }
+    division.use 'watch', [ __dirname__ + '/example', process.argv[1]], { extensions: ['.js', ''] }
     master = do division.run
 
     setTimeout next, 1000
@@ -21,7 +22,7 @@ describe '~ division watch ~', ->
   it 'should restart cluster when file was changed', (next) ->
     pid = master.workers[0].pid
 
-    exec 'touch ' + __dirname + '/../../example/noop.js', (error) ->
+    exec 'touch ' + __dirname__ + '/example/noop.js', (error) ->
       if error then next error
 
       setTimeout ->
