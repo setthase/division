@@ -10,7 +10,7 @@ describe '~ division watch ~', ->
   master = null
 
   before (next) ->
-    division.use 'watch', [__dirname + '/../../example', __dirname + '/../../node_modules/mocha/bin/_mocha'], { extensions: ['.js', ''] }
+    division.use 'watch', [__dirname + '/../../example', process.argv[1]], { extensions: ['.js', ''] }
     master = do division.run
 
     setTimeout next, 1000
@@ -32,7 +32,7 @@ describe '~ division watch ~', ->
   it 'should not restart cluster when main file was changed', (next) ->
     pid = master.workers[0].pid
 
-    exec 'touch ' + __dirname + '/../../node_modules/mocha/bin/_mocha', (error) ->
+    exec 'touch ' + process.argv[1], (error) ->
       if error then next error
 
       setTimeout ->

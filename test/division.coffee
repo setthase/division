@@ -1,8 +1,9 @@
 # Require dependencies
 should   = require 'should'
+cluster  = require 'cluster'
 Master   = require  __dirname + '/../lib/master'
 Division = require  __dirname + '/..'
-division = new Division({ path: __dirname + '/../example/noop.js' })
+division = new Division({ path: __dirname + '/../example/noop.js', size : 1 })
 
 ############################
 
@@ -29,7 +30,7 @@ describe 'Class Division', ->
 
     it 'should have default values in settings attribute', ->
       division.settings.should.be.an.Object
-      division.settings.should.containEql { extensions : [], size : Math.max 2, require('os').cpus().length }
+      division.settings.should.containEql { extensions : [], size : 1 }
 
     it 'should contain configure method', ->
       should.exist division.configure
@@ -159,6 +160,130 @@ describe 'Class Division', ->
 
       it 'should return Master class', ->
         master = do division.run
+
+        division.running.should.be.true
         master.should.be.an.instanceof Master
 
         do master.destroy
+
+      it 'should skip configuration if called second time', ->
+        master = do division.run
+
+        # This should does nothing
+        do division.run
+
+        master.workers.length.should.be.equal 1
+
+        do master.destroy
+
+      it 'should not run in worker context', (next) ->
+
+        noop = ->
+
+        cluster.isWorker = true
+
+        division.run.bind(division).should.throw /You cannot run cluster in worker process/
+
+        division.use 'debug', null, { error : noop, debug : noop }
+        division.on 'error', (error) ->
+
+          error.should.containEql 'You cannot run cluster in worker process'
+
+          cluster.isWorker = false
+
+          do next
+
+        do division.run
+
+  ############################
+  #
+  # Check private helpers
+  #
+
+  describe 'Check private helpers', ->
+
+    describe 'extend', ->
+
+      it 'should extend standard object', ->
+        source = { a : 1 }
+        target = {}
+        clone  = division.extend target, source
+
+        clone.should.be.eql source
+
+      it 'should extend standard function', ->
+        source = { a : 1 }
+        target = ->
+        clone  = division.extend target, source
+
+        should.exist clone.a
+        clone.a.should.be.eql source.a
+
+      it 'should return copy of object if target isn\'t object or function', ->
+        source = { a : 1 }
+        target = 'some string'
+        clone  = division.extend target, source
+
+        clone.should.be.eql source
+
+      it 'should do nothing if target is a part of source', ->
+        source = { a : { b : 1 } }
+        target = source.a
+        clone  = division.extend target, source
+
+        clone.should.be.equal target
+
+      it 'should extend deeply', ->
+        source = { a : { b : { c :[1] } } }
+        target = {}
+        clone  = division.extend target, source
+
+        clone.should.eql source
+
+      it 'should not extend from prototype', ->
+        class x
+          constructor : (@a) ->
+
+        x.prototype.b = { c : 3 }
+
+        source = new x(2)
+        target = {}
+        clone  = division.extend target, source
+
+        clone.should.eql source
+
+        should.exist source.b
+        should.not.exist clone.b
+
+      it 'should skip undefined properties', ->
+        source = { a : null, b : undefined }
+        target = {}
+        clone  = division.extend target, source
+
+        source.hasOwnProperty('b').should.be.true
+        clone.hasOwnProperty('b').should.be.false
+
+    describe '__object', ->
+
+      it 'should return true if object is passed', ->
+        division.__object({}).should.be.true
+        division.__object({ a : 1 }).should.be.true
+
+      it 'should return false if other types are passed', ->
+        division.__object([]).should.be.false
+        division.__object(false).should.be.false
+        division.__object(12354).should.be.false
+        division.__object('{}').should.be.false
+
+    describe '__array', ->
+
+      it 'should return true if array is passed', ->
+        division.__array([]).should.be.true
+        division.__array([ 1, 2, 3 ]).should.be.true
+
+      it 'should return false if other types are passed', ->
+        division.__array({}).should.be.false
+        division.__array(false).should.be.false
+        division.__array(12354).should.be.false
+        division.__array('[]').should.be.false
+

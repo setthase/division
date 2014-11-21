@@ -27,7 +27,7 @@ module.exports = class Worker extends EventEmitter
     __define "pid", enumerable: yes, value: @instance.process.pid
 
     __define "startup", enumerable: yes, value: do Date.now
-    __define "status",  enumerable: yes, set: (->), get : ->
+    __define "status",  enumerable: yes, get : ->
       return @instance.state
 
     # Private variables

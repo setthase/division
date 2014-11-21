@@ -21,7 +21,7 @@ module.exports = class Division extends EventEmitter
     __define "environment", enumerable: yes, value: process.env.NODE_ENV || 'development'
 
     # Public variables
-    __define "settings", enumerable: yes, set: (->), get: -> @__settings
+    __define "settings", enumerable: yes, get: -> @__settings
 
     # Private constants
     __define "master",  value: new Master()
@@ -102,9 +102,10 @@ module.exports = class Division extends EventEmitter
         @emit.call this, "error", "\n#{message}"
 
       else
-        process.stderr.write message
+        error = new Error message
+        error.name = "Internal Error"
 
-      return process.exit 3
+        throw error
 
     if not @running
       @master.configure @__settings
@@ -166,16 +167,10 @@ module.exports = class Division extends EventEmitter
 
   # Check if `obj` is plain Object
   __define "__object", value: (obj) ->
-    return no if typeof obj isnt "object" or obj.nodeType
-
-    # The try/catch suppresses exceptions thrown when attempting to access the "constructor" property of certain host objects
-    try
-        return no if obj.constructor and not Object.hasOwnProperty.call obj.constructor.prototype, "isPrototypeOf"
-    catch
-        return no
-
+    return no if typeof obj isnt "object"
+    return no if obj.constructor and not Object.hasOwnProperty.call obj.constructor.prototype, "isPrototypeOf"
     return yes
 
   # Check if `array` is an Array
   __define "__array", value: (array) ->
-    return Array.isArray.call array
+    return Array.isArray array

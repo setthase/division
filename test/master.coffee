@@ -186,8 +186,11 @@ describe 'Class Master', ->
         cluster = new division({ path: __dirname + '/../example/noop.js' })
         master  = do cluster.run
 
-      after ->
-        setTimeout master.destroy, 1000
+      after (next) ->
+        setTimeout ->
+          do master.destroy
+          do next
+        , 3000
 
       it 'should emit `restart` event', (next) ->
         master.once 'restart', next
@@ -217,4 +220,142 @@ describe 'Class Master', ->
         master.once 'destroy', next
         do master.destroy
 
+    describe.skip 'kill', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+      it '', ->
+
+    describe.skip 'publish', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+      it '', ->
+
+    describe.skip 'broadcast', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+      it '', ->
+
+  ############################
+  #
+  # Check private helpers
+  #
+
+  describe 'Check private helpers', ->
+
+    describe.skip 'spawn', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+    describe.skip 'registerEvents', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+    describe.skip 'deregisterEvents', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+    describe.skip 'worker', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+    describe.skip 'cleanup', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+    describe 'killed', ->
+
+      master  = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+      it 'should does nothing when `state` is set as `graceful`', ->
+
+        count = master.workers.length
+
+        master.state = 'graceful'
+        master.killed {}
+
+        master.workers.length.should.be.equal count
+
+      it 'should decrease number of pending kills when `state` is set as `forceful`', ->
+
+        master.pending = 2
+
+        master.state = 'forceful'
+        master.killed {}
+
+        master.pending.should.be.equal 1
+
+      it 'should throw when more that 30 workers died in short time', ->
+
+        master.state = ''
+
+        master.__killed   = 30
+        master.__incident = do Date.now
+
+        master.killed.bind(master, {}).should.throw()
 

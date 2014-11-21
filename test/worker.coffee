@@ -56,5 +56,103 @@ describe 'Class Worker', ->
 
   describe 'Check methods functionality', ->
 
-    describe 'increase', ->
+    describe 'close', ->
+
+      master = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+      it 'should emit `close` event', (next) ->
+        worker = master.workers[0]
+
+        worker.once 'close', next
+        do worker.close
+
+      it 'should turn on `decreased` flag if second parameter is true', ->
+        worker = master.workers[0]
+        worker.close null, true
+
+        worker.decreased.should.be.true
+
+    describe 'kill', ->
+
+      master = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+      it 'should emit `kill` event with signal name', (next) ->
+        worker = master.workers[0]
+
+        worker.once 'kill', (signal) ->
+          signal.should.be.equal 'SIGTERM'
+          do next
+
+        do worker.kill
+
+      it 'should change worker status to `dead`', (next) ->
+        worker = master.workers[0]
+        do worker.kill
+
+        setTimeout ->
+          worker.status.should.equal 'dead'
+          do next
+        , 3000
+
+    describe 'publish', ->
+
+      master = null
+
+      before ->
+        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        master  = do cluster.run
+
+      after ->
+        do master.destroy
+
+      it 'should emit `publish` event', (next) ->
+        worker = master.workers[0]
+
+        worker.once 'publish', (event) ->
+          event.should.be.equal 'test'
+          do next
+
+        worker.publish 'test'
+
+      it 'should pass parameter directly to emitted `publish` event', (next) ->
+        worker = master.workers[0]
+
+        worker.once 'publish', (event, param) ->
+          event.should.be.equal 'test'
+
+          param.should.not.be.an.Array
+          param.should.be.eql 1
+
+          do next
+
+        worker.publish 'test', 1
+
+
+      it 'should pass parameters as an array to emitted `publish` event', (next) ->
+        worker = master.workers[0]
+
+        worker.once 'publish', (event, params) ->
+          event.should.be.equal 'test'
+
+          params.should.be.an.Array
+          params.should.be.eql [ 1, 2, 3 ]
+
+          do next
+
+        worker.publish 'test', 1, 2, 3
+
 

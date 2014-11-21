@@ -1,6 +1,3 @@
-# Require dependencies
-logger = require './helpers/logger'
-
 ############################
 #
 # ~ division debug ~
@@ -8,7 +5,10 @@ logger = require './helpers/logger'
 # Extension enable verbose debugging informations
 #
 
-module.exports =  (options) ->
+module.exports =  (options, logger) ->
+
+  # Require dependencies
+  logger ?= require './helpers/logger'
 
   # Default settings
   options = options or { console : on }

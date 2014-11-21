@@ -5,7 +5,6 @@
   "author": "codename-",
   "main": "lib/division.js",
   "devDependencies": {
-    "coffee-coverage": "^0.4.2",
     "coffee-script": "^1.8.0",
     "coveralls": "^2.11.2",
     "istanbul": "^0.3.2",
@@ -17,8 +16,8 @@
   },
   "scripts": {
     "prepublish": "./node_modules/.bin/cake compile",
-    "precoverage": "./node_modules/.bin/cake coverage",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R dot",
+    "precoverage": "./node_modules/.bin/cake compile",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcov -- -R spec",
     "pretest": "./node_modules/.bin/cake compile",
     "test": "./node_modules/.bin/cake --reporter spec test"
   },

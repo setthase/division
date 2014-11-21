@@ -165,9 +165,7 @@ module.exports = class Master extends EventEmitter
   #
 
   # Configure cluster master process
-  __define "configure", enumerable: yes, value: (@settings) ->
-
-    # TODO: Some options and functions here
+  __define "configure", value: (@settings) ->
 
     # Allow to add cluster events to Master instance
     do @registerEvents
@@ -260,10 +258,12 @@ module.exports = class Master extends EventEmitter
 
         message = """
 
+
                     Detected over 30 worker deaths since last 5 minutes,
                     there is most likely a serious issue with your application.
 
                     Aborting!
+
 
                   """
 
@@ -271,9 +271,10 @@ module.exports = class Master extends EventEmitter
           @emit.call this, "error", "\n#{message}"
 
         else
-          process.stderr.write message
+          error = new Error message
+          error.name = "Application Error"
 
-        return process.exit 1
+          throw error
 
     @cleanup worker.id
 
