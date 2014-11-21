@@ -10,7 +10,7 @@ describe '~ division watch ~', ->
   master = null
 
   before (next) ->
-    division.use 'watch', [__dirname + '/../../example', process.argv[1]], { extensions: ['.js', ''] }
+    division.use 'watch', [__dirname + '/../../example/noop.js', process.argv[1]], { extensions: ['.js', ''] }
     master = do division.run
 
     setTimeout next, 1000
