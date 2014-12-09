@@ -28,7 +28,7 @@ module.exports = class Division extends EventEmitter
 
     # Private variables
     __define "running",    writable: yes, value: off
-    __define "__settings", writable: yes, value: { extensions : [], size : Math.max 2, require('os').cpus().length }
+    __define "__settings", writable: yes, value: { extensions : [], size : Math.max(2, require('os').cpus().length), kills : 30 }
 
     # Apply user defined settings
     @extend @__settings, settings

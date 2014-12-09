@@ -254,7 +254,7 @@ module.exports = class Master extends EventEmitter
     # If we have many failing workers in a short time period,
     # then we likely have a serious issue.
     if Date.now() - @__incident < 300000
-      if ++@__killed > 30
+      if ++@__killed > @settings.kills
 
         message = """
 
