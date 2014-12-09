@@ -133,7 +133,7 @@ describe 'Class Master', ->
         cluster = new division({ path: __dirname + '/../example/noop.js' })
         master  = do cluster.run
 
-        master.increase 15
+        master.increase 5
 
         setTimeout next, 1000
 
