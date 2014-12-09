@@ -5,7 +5,7 @@ division = new (require __dirname + '/../..')({ path: __dirname + '/../../exampl
 
 ############################
 
-describe '~ division watch ~', ->
+describe.skip '~ division watch ~', ->
 
   master = null
   __dirname__ = do process.cwd
