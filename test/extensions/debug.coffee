@@ -41,8 +41,16 @@ describe '~ division debug ~', ->
     # emit different types of events
     emitter.emit 'error'
     emitter.emit 'increase'
+    emitter.emit 'decrease'
+    emitter.emit 'restart'
+    emitter.emit 'close'
     emitter.emit 'destroy'
     emitter.emit 'fork'
+    emitter.emit 'online'
+    emitter.emit 'listening'
+    emitter.emit 'disconnect'
+    emitter.emit 'exit'
+    emitter.emit 'filechange'
 
     # check if logger methods was called
     logger.debug.called.should.be.true

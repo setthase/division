@@ -46,7 +46,7 @@ module.exports =  (options, logger) ->
     logger.debug "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is disconnected", options
 
   @on 'exit', (worker, code, signal) ->
-    if worker.instance.suicide
+    if worker?.instance?.suicide
       logger.debug "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is exited", options
     else
       logger.error "Worker no. #{worker?.id or "?"} (PID: #{worker?.pid or "unknown"}) is exited unexpectedly (code: #{code}, signal: #{signal})", options
