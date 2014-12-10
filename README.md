@@ -1,7 +1,7 @@
 division
 ========
 
-[![](https://img.shields.io/travis/codename-/division.svg?style=flat)](https://travis-ci.org/codename-/division) [![](https://img.shields.io/coveralls/codename-/division.svg?style=flat)](https://coveralls.io/r/codename-/division) ![](https://img.shields.io/node/v/division.svg?style=flat) [ ![](https://img.shields.io/npm/v/division.svg?style=flat)](https://npmjs.org/package/division) ![](https://img.shields.io/npm/l/division.svg?style=flat) ![](https://img.shields.io/npm/dm/division.svg?style=flat)
+[![](https://img.shields.io/travis/codename-/division.svg?style=flat-square)](https://travis-ci.org/codename-/division) [![](https://img.shields.io/coveralls/codename-/division.svg?style=flat-square)](https://coveralls.io/r/codename-/division) ![](https://img.shields.io/node/v/division.svg?style=flat-square) [ ![](https://img.shields.io/npm/v/division.svg?style=flat-square)](https://npmjs.org/package/division) ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square) ![](https://img.shields.io/npm/dm/division.svg?style=flat-square)
 
 Simple yet powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.<br>
 This module is inspired by impressive, but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [TJ Holowaychuk](https://github.com/tj).
