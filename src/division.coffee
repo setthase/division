@@ -17,18 +17,18 @@ module.exports = class Division extends EventEmitter
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Public constants
-    __define "version",     enumerable: yes, value: require(__dirname + '/../package.json').version
-    __define "environment", enumerable: yes, value: process.env.NODE_ENV || 'development'
+    __define 'version',     enumerable: yes, value: require(__dirname + '/../package.json').version
+    __define 'environment', enumerable: yes, value: process.env.NODE_ENV or 'development'
 
     # Public variables
-    __define "settings", enumerable: yes, get: -> @__settings
+    __define 'settings', enumerable: yes, get: -> @__settings
 
     # Private constants
-    __define "master",  value: new Master()
+    __define 'master',  value: new Master()
 
     # Private variables
-    __define "running",    writable: yes, value: off
-    __define "__settings", writable: yes, value: { extensions : [], size : Math.max(2, require('os').cpus().length), kills : 30 }
+    __define 'running',    writable: yes, value: off
+    __define '__settings', writable: yes, value: { extensions : [], size : Math.max(2, require('os').cpus().length), kills : 30 }
 
     # Apply user defined settings
     @extend @__settings, settings
@@ -39,10 +39,10 @@ module.exports = class Division extends EventEmitter
   #
 
   # Helper providing definer of methods (added to prototype)
-  __define = (args...) => Object.defineProperty.apply null, [].concat Division.prototype, args
+  __define = (args...) -> Object.defineProperty.apply null, [].concat Division.prototype, args
 
   # Configure callback for zero or more environments
-  __define "configure", enumerable: yes, value: (environments..., fn)->
+  __define 'configure', enumerable: yes, value: (environments..., fn) ->
     # Skip configuration if there is no callback defined
     return this if not fn or typeof fn isnt 'function'
 
@@ -52,35 +52,35 @@ module.exports = class Division extends EventEmitter
     return this
 
   # Assign `setting` in settings to `value`
-  __define "set", enumerable: yes, value: (setting, value)->
+  __define 'set', enumerable: yes, value: (setting, value) ->
     @__settings[setting] = value
     return this
 
   # Return value of `setting`
-  __define "get", enumerable: yes, value: (setting)->
+  __define 'get', enumerable: yes, value: (setting) ->
     return @__settings[setting]
 
   # Enable `setting`
-  __define "enable", enumerable: yes, value: (setting)->
+  __define 'enable', enumerable: yes, value: (setting) ->
     return @set setting, on
 
   # Check if `setting` is enabled (truthy)
-  __define "enabled", enumerable: yes, value: (setting)->
+  __define 'enabled', enumerable: yes, value: (setting) ->
     return !!@__settings[setting]
 
   # Disable `setting`
-  __define "disable", enumerable: yes, value: (setting)->
+  __define 'disable', enumerable: yes, value: (setting) ->
     return @set setting, off
 
   # Check if `setting` is disabled (truthy)
-  __define "disabled", enumerable: yes, value: (setting)->
-    return !@__settings[setting]
+  __define 'disabled', enumerable: yes, value: (setting) ->
+    return not @__settings[setting]
 
   # Use the given `extension`
-  __define "use", enumerable: yes, value: (extension, parameters...) ->
+  __define 'use', enumerable: yes, value: (extension, parameters...) ->
     return this if not extension
 
-    if typeof extension is "string"
+    if typeof extension is 'string'
       @__settings.extensions.push extension
 
       try
@@ -93,17 +93,17 @@ module.exports = class Division extends EventEmitter
     return this
 
   # Start cluster process
-  __define "run", enumerable: yes, value: (fn) ->
+  __define 'run', enumerable: yes, value: (fn) ->
 
     if cluster.isWorker
-      message = "You cannot run cluster in worker process!\n"
+      message = 'You cannot run cluster in worker process!\n'
 
       if ~ @__settings.extensions.indexOf 'debug'
-        @emit.call this, "error", "\n#{message}"
+        @emit.call this, 'error', "\n#{message}"
 
       else
         error = new Error message
-        error.name = "Internal Error"
+        error.name = 'Internal Error'
 
         throw error
 
@@ -127,8 +127,8 @@ module.exports = class Division extends EventEmitter
   #
 
   # Check if `path` is plain Object
-  __define "resolve", value: do ->
-    extensions = fs.readdirSync(__dirname + '/extensions').map (file) -> file.split(".")[0]
+  __define 'resolve', value: do ->
+    extensions = fs.readdirSync(__dirname + '/extensions').map (file) -> file.split('.')[0]
 
     return (extension) ->
       if ~ extensions.indexOf extension
@@ -137,8 +137,8 @@ module.exports = class Division extends EventEmitter
         return extension
 
   # Deeply extend object
-  __define "extend", value : (target, source) ->
-    if typeof target isnt "object" and typeof target isnt 'function'
+  __define 'extend', value : (target, source) ->
+    if typeof target isnt 'object' and typeof target isnt 'function'
       target = {}
 
     for own key, copy of source
@@ -166,11 +166,11 @@ module.exports = class Division extends EventEmitter
     return target
 
   # Check if `obj` is plain Object
-  __define "__object", value: (obj) ->
-    return no if typeof obj isnt "object"
-    return no if obj.constructor and not Object.hasOwnProperty.call obj.constructor.prototype, "isPrototypeOf"
+  __define '__object', value: (obj) ->
+    return no if typeof obj isnt 'object'
+    return no if obj.constructor and not Object.hasOwnProperty.call obj.constructor.prototype, 'isPrototypeOf'
     return yes
 
   # Check if `array` is an Array
-  __define "__array", value: (array) ->
+  __define '__array', value: (array) ->
     return Array.isArray array

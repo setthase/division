@@ -6,6 +6,7 @@
   "main": "lib/division.js",
   "devDependencies": {
     "coffee-script": "^1.8.0",
+    "coffeelint": "^1.6.1",
     "coveralls": "^2.11.2",
     "istanbul": "^0.3.2",
     "mocha": "^2.0.1",
@@ -19,7 +20,8 @@
     "precoverage": "./node_modules/.bin/cake compile",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcov -- -R spec",
     "pretest": "./node_modules/.bin/cake compile",
-    "test": "./node_modules/.bin/cake --reporter spec test"
+    "test": "./node_modules/.bin/cake --reporter spec test",
+    "lint": "./node_modules/.bin/coffeelint src"
   },
   "bugs": {
     "url": "http://github.com/codename-/division/issues"

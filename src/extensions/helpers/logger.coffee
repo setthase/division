@@ -24,7 +24,7 @@ Time = ->
   sec   = do d.getSeconds
   ms    = do d.getMilliseconds
 
-  glue offset(day, 0, 2), "-", offset(month, 0, 2), "-", year, " ", offset(hour, 0, 2), ":", offset(min, 0, 2), ":", offset(sec, 0, 2), ":", offset(ms, 0, 3)
+  glue offset(day, 0, 2), '-', offset(month, 0, 2), '-', year, ' ', offset(hour, 0, 2), ':', offset(min, 0, 2), ':', offset(sec, 0, 2), ':', offset(ms, 0, 3)
 
 ## Export logger
 module.exports = logger = {}
@@ -41,9 +41,9 @@ for mode, color of modes
       mode  = offset mode, ' ', 8
 
       label = glue mode, ' [', time, '] '
-      label = glue "\x1b[", color, "m", label, "\x1b[0m"
+      label = glue '\x1b[', color, 'm', label, '\x1b[0m'
 
-      message = glue label, message, "\n"
+      message = glue label, message, '\n'
 
       # Write message to file
       if options.file

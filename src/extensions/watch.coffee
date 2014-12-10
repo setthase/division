@@ -41,7 +41,7 @@ module.exports = (files, options = {}) ->
 
     fs.watchFile file, { interval, persistent : no }, (curr, prev) =>
       if curr.mtime > prev.mtime
-        @emit "filechange", file
+        @emit 'filechange', file
         do @restart
 
   # Traverse on each path in files and set watcher

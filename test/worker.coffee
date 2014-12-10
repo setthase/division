@@ -104,7 +104,7 @@ describe 'Class Worker', ->
         do worker.kill
 
         setTimeout ->
-          worker.status.should.equal 'dead'
+          worker.status.should.match /dead|none/
           do next
         , 3000
 

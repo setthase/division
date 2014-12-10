@@ -21,18 +21,18 @@ module.exports = class Master extends EventEmitter
     __define = (args...) => Object.defineProperty.apply null, [].concat this, args
 
     # Public constants
-    __define "pid",     enumerable: yes, value: process.pid
-    __define "startup", enumerable: yes, value: do Date.now
+    __define 'pid',     enumerable: yes, value: process.pid
+    __define 'startup', enumerable: yes, value: do Date.now
 
     # Private variables
-    __define "workers",  writable: yes, value: []
-    __define "settings", writable: yes, value: {}
+    __define 'workers',  writable: yes, value: []
+    __define 'settings', writable: yes, value: {}
 
-    __define "state",    writable: yes, value: ''
-    __define "pending",  writable: yes, value: 0
+    __define 'state',    writable: yes, value: ''
+    __define 'pending',  writable: yes, value: 0
 
-    __define "__killed",   writable: yes, value: 0
-    __define "__incident", writable: yes, value: 0
+    __define '__killed',   writable: yes, value: 0
+    __define '__incident', writable: yes, value: 0
 
   ############################
   #
@@ -40,19 +40,19 @@ module.exports = class Master extends EventEmitter
   #
 
   # Helper providing definer of methods (added to prototype)
-  __define = (args...) => Object.defineProperty.apply null, [].concat Master.prototype, args
+  __define = (args...) -> Object.defineProperty.apply null, [].concat Master.prototype, args
 
   # Register signal
-  __define "addSignalListener", enumerable: yes, value: (event_or_signal, callback) ->
+  __define 'addSignalListener', enumerable: yes, value: (event_or_signal, callback) ->
     process.on event_or_signal, callback.bind this
     return this
 
   ## Runtime
 
   # Spawn new worker
-  __define "increase", enumerable: yes, value: (n = 1) ->
+  __define 'increase', enumerable: yes, value: (n = 1) ->
     # Emit 'increase' event
-    @emit.call this, "increase", n
+    @emit.call this, 'increase', n
 
     # Increase size in settings
     @settings.size += n
@@ -63,13 +63,13 @@ module.exports = class Master extends EventEmitter
     return this
 
   # Close one of workers
-  __define "decrease", enumerable: yes, value: (n = 1) ->
+  __define 'decrease', enumerable: yes, value: (n = 1) ->
     # Limit `n` to proper value
     n = 1 if n <= 0
     n = limit if n > (limit = @workers.length)
 
     # Emit 'decrease' event
-    @emit.call this, "decrease", n
+    @emit.call this, 'decrease', n
 
     # Decrease size in settings
     @settings.size -= n
@@ -85,9 +85,9 @@ module.exports = class Master extends EventEmitter
     return this
 
   # Restart all workers
-  __define "restart", enumerable: yes, value: ->
+  __define 'restart', enumerable: yes, value: ->
     # Emit 'restart' event
-    @emit.call this, "restart"
+    @emit.call this, 'restart'
 
     @workers.forEach (worker) =>
       worker.close @settings.timeout
@@ -95,9 +95,9 @@ module.exports = class Master extends EventEmitter
     return this
 
   # Graceful shutdown cluster
-  __define "close", enumerable: yes, value: ->
+  __define 'close', enumerable: yes, value: ->
     # Emit 'close' event
-    @emit.call this, "close"
+    @emit.call this, 'close'
 
     @state   = 'graceful'
     @pending = @workers.length
@@ -110,9 +110,9 @@ module.exports = class Master extends EventEmitter
     return this
 
   # Forceful shutdown cluster
-  __define "destroy", enumerable: yes, value: ->
+  __define 'destroy', enumerable: yes, value: ->
     # Emit 'destroy' event
-    @emit.call this, "destroy"
+    @emit.call this, 'destroy'
 
     @state = 'forceful'
     @kill 'SIGKILL'
@@ -122,14 +122,14 @@ module.exports = class Master extends EventEmitter
     return this
 
   # Send `signal` to all workers, if no `signal` is specified `SIGTERM` is send
-  __define "kill", enumerable: yes, value: (signal = "SIGTERM") ->
+  __define 'kill', enumerable: yes, value: (signal = 'SIGTERM') ->
     @workers.forEach (worker) ->
       worker.kill signal
 
     return this
 
   # Maintain worker count, re-spawning if necessary
-  __define "maintenance", enumerable: yes, value: ->
+  __define 'maintenance', enumerable: yes, value: ->
     if @workers.length < @settings.size
       n = @settings.size - @workers.length
       do @spawn while n--
@@ -147,13 +147,13 @@ module.exports = class Master extends EventEmitter
   ## Communication
 
   # Send message to worker with `id`
-  __define "publish", enumerable: yes, value: (id, event, parameters...) ->
+  __define 'publish', enumerable: yes, value: (id, event, parameters...) ->
     @worker(id)?.publish event, parameters
 
     return this
 
   # Send message to all workers
-  __define "broadcast", enumerable: yes, value: (event, parameters...) ->
+  __define 'broadcast', enumerable: yes, value: (event, parameters...) ->
     @workers.forEach (worker) ->
       worker.publish event, parameters
 
@@ -165,7 +165,7 @@ module.exports = class Master extends EventEmitter
   #
 
   # Configure cluster master process
-  __define "configure", value: (@settings) ->
+  __define 'configure', value: (@settings) ->
 
     # Allow to add cluster events to Master instance
     do @registerEvents
@@ -177,42 +177,42 @@ module.exports = class Master extends EventEmitter
     cluster.setupMaster { exec : @settings.path, args : @settings.args, silent : @settings.silent }
 
   # Spawn another worker if workers count is below size in settings
-  __define "spawn", value: (force)->
+  __define 'spawn', value: (force) ->
     @workers.push new Worker() if @workers.length < @settings.size or force
     return this
 
   # Register cluster events and map them to EventEmitter events
-  __define "registerEvents", value: ->
+  __define 'registerEvents', value: ->
     unless @registered
 
-      cluster.on "fork", (worker) =>
+      cluster.on 'fork', (worker) =>
         if worker = @worker worker.id
-          @emit.call this, "fork", worker
+          @emit.call this, 'fork', worker
 
-      cluster.on "online", (worker) =>
+      cluster.on 'online', (worker) =>
         if worker = @worker worker.id
-          @emit.call this, "online", worker
+          @emit.call this, 'online', worker
 
-      cluster.on "listening", (worker, address) =>
+      cluster.on 'listening', (worker, address) =>
         if worker = @worker worker.id
-          @emit.call this, "listening", worker, address
+          @emit.call this, 'listening', worker, address
 
-      cluster.on "disconnect", (worker) =>
+      cluster.on 'disconnect', (worker) =>
         if worker = @worker worker.id
-          @emit.call this, "disconnect", worker
+          @emit.call this, 'disconnect', worker
 
           unless worker.decreased then @spawn yes
 
-      cluster.on "exit", (worker, code, signal) =>
+      cluster.on 'exit', (worker, code, signal) =>
         if worker = @worker worker.id
-          @emit.call this, "exit", worker, code, signal
+          @emit.call this, 'exit', worker, code, signal
 
           @killed worker
 
-      cluster.on "error", (error) =>
-        @emit.call this, "error", error.stack
+      cluster.on 'error', (error) =>
+        @emit.call this, 'error', error.stack
 
-      @on "error", (error) =>
+      @on 'error', (error) =>
         unless ~ @settings.extensions.indexOf 'debug'
           process.stderr.write "\n#{error}"
 
@@ -221,7 +221,7 @@ module.exports = class Master extends EventEmitter
     return this
 
     # Register cluster events and map them to EventEmitter events
-  __define "deregisterEvents", value: ->
+  __define 'deregisterEvents', value: ->
     if @registered
 
       do @removeAllListeners
@@ -233,7 +233,7 @@ module.exports = class Master extends EventEmitter
     return this
 
   # Return worker with specified `id`
-  __define "worker", value: (id) ->
+  __define 'worker', value: (id) ->
     if id
       for worker in @workers
         return worker if worker?.id is id
@@ -241,16 +241,14 @@ module.exports = class Master extends EventEmitter
     return null
 
   # Remove worker with `id` from `workers` list
-  __define "cleanup", value: (id) ->
+  __define 'cleanup', value: (id) ->
     if id
       for worker in @workers
         @workers.splice(_i, 1) if worker?.id is id or worker is null
 
     return this
 
-  __define "killed", value: (worker) ->
-    console.log @__killed
-
+  __define 'killed', value: (worker) ->
     # Record new time since last incident if previous incident is older than 300 seconds.
     if Date.now() - @__incident > 300000
       @__killed   = 0
@@ -273,11 +271,11 @@ module.exports = class Master extends EventEmitter
                   """
 
         if ~ @settings.extensions.indexOf 'debug'
-          @emit.call this, "error", "\n#{message}"
+          @emit.call this, 'error', "\n#{message}"
 
         else
           error = new Error message
-          error.name = "Application Error"
+          error.name = 'Application Error'
 
           throw error
 
