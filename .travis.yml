@@ -10,6 +10,9 @@
    except:
      - gh-pages
 
+ before_install:
+   - npm update -g npm
+
  script:
    - npm run coverage
 
