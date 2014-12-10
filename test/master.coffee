@@ -18,11 +18,10 @@ describe 'Class Master', ->
 
     before ->
       cluster = new division({ path: __dirname + '/../example/noop.js' })
+      master  = do cluster.run
 
       # Increase limit of fast-killing workers to 100
       cluster.set 'kills', 100
-
-      master  = do cluster.run
 
     after ->
       do master.destroy

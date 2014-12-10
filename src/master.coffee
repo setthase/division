@@ -224,7 +224,10 @@ module.exports = class Master extends EventEmitter
   __define "deregisterEvents", value: ->
     if @registered
 
+      do @removeAllListeners
       do cluster.removeAllListeners
+      do process.removeAllListeners
+
       @registered = no
 
     return this
@@ -246,6 +249,8 @@ module.exports = class Master extends EventEmitter
     return this
 
   __define "killed", value: (worker) ->
+    console.log @__killed
+
     # Record new time since last incident if previous incident is older than 300 seconds.
     if Date.now() - @__incident > 300000
       @__killed   = 0
@@ -259,7 +264,7 @@ module.exports = class Master extends EventEmitter
         message = """
 
 
-                    Detected over 30 worker deaths since last 5 minutes,
+                    Detected over #{@settings.kills} worker deaths since last 5 minutes,
                     there is most likely a serious issue with your application.
 
                     Aborting!
