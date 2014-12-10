@@ -34,6 +34,8 @@ module.exports = class Master extends EventEmitter
     __define '__killed',   writable: yes, value: 0
     __define '__incident', writable: yes, value: 0
 
+    __define '__listeners', writable: yes, value: []
+
   ############################
   #
   # Define public methods
@@ -44,7 +46,15 @@ module.exports = class Master extends EventEmitter
 
   # Register signal
   __define 'addSignalListener', enumerable: yes, value: (event_or_signal, callback) ->
-    process.on event_or_signal, callback.bind this
+    # Bind scope of callback
+    callback = callback.bind this
+
+    # Save information about added signal listeners
+    @__listeners.push [event_or_signal, callback]
+
+    # Add signal listener to the process
+    process.on event_or_signal, callback
+
     return this
 
   ## Runtime
@@ -224,11 +234,17 @@ module.exports = class Master extends EventEmitter
   __define 'deregisterEvents', value: ->
     if @registered
 
+      # Remove all listeners from cluster instance
       do @removeAllListeners
       do cluster.removeAllListeners
-      do process.removeAllListeners
 
+      # Remove all listeners from process instance
+      for [ event, listener ] in @__listeners
+        process.removeListener event, listener
+
+      # Reset state to the defaults
       @registered = no
+      @__listeners.length = 0
 
     return this
 
