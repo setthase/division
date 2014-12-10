@@ -20,8 +20,6 @@ describe 'Class Master', ->
       cluster = new division({ path: __dirname + '/../example/noop.js' })
       master  = do cluster.run
 
-      # Increase limit of fast-killing workers to 100
-      cluster.set 'kills', 100
 
     after ->
       do master.destroy
@@ -189,6 +187,12 @@ describe 'Class Master', ->
         cluster = new division({ path: __dirname + '/../example/noop.js' })
         master  = do cluster.run
 
+        # Increase limit of fast-killing workers to 100
+        cluster.set 'kills', 100
+
+        console.log cluster.get 'kills'
+        console.log master.settings.kills
+
       after (next) ->
         setTimeout ->
           do master.destroy
@@ -196,6 +200,8 @@ describe 'Class Master', ->
         , 3000
 
       it 'should emit `restart` event', (next) ->
+        console.log master.workers.length
+
         master.once 'restart', next
         do master.restart
 
