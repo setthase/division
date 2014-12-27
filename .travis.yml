@@ -1,3 +1,4 @@
+ sudo: false
  language: node_js
 
  node_js:
@@ -13,4 +14,3 @@
 
  after_script:
    - if [[ `node --version` == *v0.10*  ]]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls --verbose; fi
-
