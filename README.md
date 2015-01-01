@@ -1,10 +1,13 @@
 ![division](https://github.com/codename-/division/raw/master/content/logo.png)
-========
 
-[![](https://img.shields.io/travis/codename-/division.svg?style=flat-square)](https://travis-ci.org/codename-/division) [![](https://img.shields.io/coveralls/codename-/division.svg?style=flat-square)](https://coveralls.io/r/codename-/division) ![](https://img.shields.io/node/v/division.svg?style=flat-square) [ ![](https://img.shields.io/npm/v/division.svg?style=flat-square)](https://npmjs.org/package/division) ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square) ![](https://img.shields.io/npm/dm/division.svg?style=flat-square)
+## Overview
 
 Simple yet powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://nodejs.org/api/cluster.html) API.<br>
 This module is inspired by impressive, but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [TJ Holowaychuk](https://github.com/tj).
+
+
+[![](https://img.shields.io/travis/codename-/division.svg?style=flat-square)](https://travis-ci.org/codename-/division) [![](https://img.shields.io/coveralls/codename-/division.svg?style=flat-square)](https://coveralls.io/r/codename-/division) ![](https://img.shields.io/node/v/division.svg?style=flat-square) [ ![](https://img.shields.io/npm/v/division.svg?style=flat-square)](https://npmjs.org/package/division) ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square) ![](https://img.shields.io/npm/dm/division.svg?style=flat-square)
+
 
 ## Installation
 
@@ -42,7 +45,7 @@ Other features:
     * watch: reload cluster when files was changed
     * signals: add ability to control cluster with POSIX signals
 
-## Example
+## Examples
 
 More examples you can find in `examples` directory.
 
@@ -99,7 +102,7 @@ var cluster = new division({ path : 'app.js' });
 cluster.run();
 ```
 
-### API Reference
+## API Reference
 
 For API reference take a look at [API.md](https://github.com/codename-/division/blob/master/API.md) file.
 
