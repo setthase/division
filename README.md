@@ -1,4 +1,4 @@
-division
+![division](https://github.com/codename-/division/raw/master/content/logo.png)
 ========
 
 [![](https://img.shields.io/travis/codename-/division.svg?style=flat-square)](https://travis-ci.org/codename-/division) [![](https://img.shields.io/coveralls/codename-/division.svg?style=flat-square)](https://coveralls.io/r/codename-/division) ![](https://img.shields.io/node/v/division.svg?style=flat-square) [ ![](https://img.shields.io/npm/v/division.svg?style=flat-square)](https://npmjs.org/package/division) ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square) ![](https://img.shields.io/npm/dm/division.svg?style=flat-square)
@@ -98,4 +98,8 @@ var cluster = new division({ path : 'app.js' });
 
 cluster.run();
 ```
+
+### API Reference
+
+For API reference take a look at [API.md](https://github.com/codename-/division/blob/master/API.md) file.
 
