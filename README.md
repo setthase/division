@@ -6,7 +6,7 @@ Simple yet powerful wrapper over [node.js](http://nodejs.org/) [cluster](http://
 This module is inspired by impressive, but abandoned project [Cluster](https://github.com/LearnBoost/cluster) created by [TJ Holowaychuk](https://github.com/tj).
 
 
-[![](https://img.shields.io/travis/codename-/division.svg?style=flat-square)](https://travis-ci.org/codename-/division) [![](https://img.shields.io/coveralls/codename-/division.svg?style=flat-square)](https://coveralls.io/r/codename-/division) ![](https://img.shields.io/node/v/division.svg?style=flat-square) [ ![](https://img.shields.io/npm/v/division.svg?style=flat-square)](https://npmjs.org/package/division) ![](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square) ![](https://img.shields.io/npm/dm/division.svg?style=flat-square)
+[![](https://img.shields.io/npm/dm/division.svg?style=flat-square)](https://npmjs.org/package/division) [![](https://img.shields.io/travis/codename-/division.svg?style=flat-square)](https://travis-ci.org/codename-/division) [![](https://img.shields.io/coveralls/codename-/division.svg?style=flat-square)](https://coveralls.io/r/codename-/division) [![](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)]() [![](https://img.shields.io/badge/version-1.0.0-brightgreen.svg?style=flat-square)]()  [![](https://img.shields.io/badge/node.js->=_0.10.0-brightgreen.svg?style=flat-square)]() [![](https://img.shields.io/badge/io.js-compatible-brightgreen.svg?style=flat-square)]()
 
 
 ## Installation
@@ -35,7 +35,8 @@ The most valuable feature: you don't need to change your code to working within 
 Other features:
 
   * works with node version ≥ 0.10
-  * standalone (without 3rd-party dependencies)
+  * compatible with io.js (all tests green)
+  * standalone (i.e. without 3rd-party dependencies)
   * zero-downtime restart
   * maintains worker count
   * forceful shutdown support
@@ -104,5 +105,5 @@ cluster.run();
 
 ## API Reference
 
-For API reference take a look at [API.md](https://github.com/codename-/division/blob/master/API.md) file.
+For API reference take a look at [docs](https://github.com/codename-/division/blob/master/docs) directory.
 
