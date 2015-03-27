@@ -3,7 +3,7 @@ should   = require 'should'
 cluster  = require 'cluster'
 Master   = require  __dirname + '/../lib/master'
 Division = require  __dirname + '/..'
-division = new Division({ path: __dirname + '/../example/noop.js', size : 1 })
+division = new Division({ path: __dirname + '/../examples/noop.js', size : 1 })
 
 ############################
 

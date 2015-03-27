@@ -27,6 +27,15 @@ Then you can test module typing:
 ```bash
 $ npm test
 ```
+#####  Code coverage
+
+To get code coverage results run:
+
+```bash
+$ npm run coverage
+```
+
+Reports are in `coverage` directory.
 
 ## Features
 

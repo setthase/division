@@ -17,7 +17,7 @@ describe 'Class Master', ->
     master = null
 
     before ->
-      cluster = new division({ path: __dirname + '/../example/noop.js' })
+      cluster = new division({ path: __dirname + '/../examples/noop.js' })
       master  = do cluster.run
 
 
@@ -82,7 +82,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -131,7 +131,7 @@ describe 'Class Master', ->
       master  = null
 
       before (next) ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
         master.increase 5
@@ -184,7 +184,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
         # Increase limit of fast-killing workers to 100
@@ -205,7 +205,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       it 'should emit `close` event', (next) ->
@@ -217,7 +217,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       it 'should emit `destroy` event', (next) ->
@@ -229,7 +229,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -242,20 +242,20 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
         do master.destroy
 
-      it '', ->
+      it 'should send message to worker with specified ID', ->
 
     describe.skip 'broadcast', ->
 
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -275,7 +275,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -286,7 +286,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -297,7 +297,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -308,7 +308,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -319,7 +319,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -330,7 +330,7 @@ describe 'Class Master', ->
       master  = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->

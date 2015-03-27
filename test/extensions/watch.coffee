@@ -1,7 +1,7 @@
 # Require dependencies
 {exec}   = require 'child_process'
 should   = require 'should'
-division = new (require __dirname + '/../..')({ path: __dirname + '/../../example/noop.js' })
+division = new (require __dirname + '/../..')({ path: __dirname + '/../../examples/noop.js' })
 
 ############################
 
@@ -11,7 +11,7 @@ describe.skip '~ division watch ~', ->
   __dirname__ = do process.cwd
 
   before (next) ->
-    division.use 'watch', [ __dirname__ + '/example', process.argv[1]], { extensions: ['.js', ''] }
+    division.use 'watch', [ __dirname__ + '/examples', process.argv[1]], { extensions: ['.js', ''] }
     master = do division.run
 
     setTimeout next, 1000
@@ -22,7 +22,7 @@ describe.skip '~ division watch ~', ->
   it 'should restart cluster when file was changed', (next) ->
     pid = master.workers[0].pid
 
-    exec 'touch ' + __dirname__ + '/example/noop.js', (error) ->
+    exec 'touch ' + __dirname__ + '/examples/noop.js', (error) ->
       if error then next error
 
       setTimeout ->

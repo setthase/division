@@ -18,7 +18,7 @@ describe 'Class Worker', ->
     worker = null
 
     before ->
-      cluster = new division({ path: __dirname + '/../example/noop.js', size : 1 })
+      cluster = new division({ path: __dirname + '/../examples/noop.js', size : 1 })
       master  = cluster.run ->
         worker  = @workers[0]
 
@@ -61,7 +61,7 @@ describe 'Class Worker', ->
       master = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -84,7 +84,7 @@ describe 'Class Worker', ->
       master = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
@@ -113,7 +113,7 @@ describe 'Class Worker', ->
       master = null
 
       before ->
-        cluster = new division({ path: __dirname + '/../example/noop.js' })
+        cluster = new division({ path: __dirname + '/../examples/noop.js' })
         master  = do cluster.run
 
       after ->
