@@ -184,7 +184,11 @@ module.exports = class Master extends EventEmitter
     @addSignalListener 'SIGCHLD', @maintenance
 
     # Set cluster runtime environment
-    cluster.setupMaster { exec : @settings.path, args : @settings.args, silent : @settings.silent }
+    cluster.setupMaster {
+        exec : @settings.path,
+        args : (@settings.args or process.argv.slice(2)),
+        silent : (@settings.silent or false)
+    }
 
   # Spawn another worker if workers count is below size in settings
   __define 'spawn', value: (force) ->
