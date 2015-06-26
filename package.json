@@ -1,8 +1,8 @@
 {
   "name": "division",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
   "description": "Simple yet powerful wrapper over node.js cluster API. This module is inspired by impressive, but abandoned project Cluster created by TJ Holowaychuk.",
-  "author": "codename-",
+  "author": "Tomasz Sobczak",
   "main": "lib/division.js",
   "devDependencies": {
     "coffee-script": "1.8.0",
