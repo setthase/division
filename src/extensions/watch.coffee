@@ -36,8 +36,11 @@ module.exports = (files, options = {}) ->
         else
           watch file unless file is process.argv[1]
 
+  fileTypeIsToWatch = (file) ->
+     return extensions[0] is '.*' || (~ extensions.indexOf path.extname file)
+
   watch = (file) =>
-    return unless ~ extensions.indexOf path.extname file
+    return unless fileTypeIsToWatch file
 
     fs.watchFile file, { interval, persistent : no }, (curr, prev) =>
       if curr.mtime > prev.mtime
